@@ -2,10 +2,8 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDate;
+import java.io.Serializable;
 
 @Entity
 @Builder
@@ -14,9 +12,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
 @Table(name = "tbl_wish_list")
-public class WishList {
+public class WishList extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     // 관심상품아이디
     @Id
@@ -34,17 +33,9 @@ public class WishList {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    // 삭제유무 ( default 0 : 등록, 1 : 삭제 )
-    @Column(name = "is_deleted", nullable = false, length = 1)
-    private Boolean isDeleted = false;
+//    // 삭제유무 ( default 0 : 등록, 1 : 삭제 )
+//    @Column(name = "is_deleted", nullable = false, length = 1)
+//    @Builder.Default
+//    private Boolean isDeleted = false;
 
-    // 등록일
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    // 수정일
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
 }

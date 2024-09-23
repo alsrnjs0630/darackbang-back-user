@@ -2,11 +2,9 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Builder
@@ -15,9 +13,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
-@Table(name = "tbl_subcribe")
-public class Subscribe {
+@Table(name = "tbl_subscribe")
+public class Subscribe extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     // 구독 아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,9 +49,9 @@ public class Subscribe {
     @Column(name = "payment_date", nullable = false)
     private LocalDate paymentDate;
 
-    // 배송시작일
+    // 배송일
     @Column(name = "shipping_date", nullable = false)
-    private LocalDate shippingDate;
+    private LocalDate shippingDate;//2024.10.29/
 
     // 구독 상태 ( default 01 : 구독, 02 : 해지신청, 03: 구독해지, 04: 구독중지)
     @Builder.Default
@@ -63,25 +62,4 @@ public class Subscribe {
     @Column(name = "suspend_date")
     private LocalDate suspendDate;
 
-    // 등록일
-    @Column(name = "created_date", nullable = false)
-    @CreatedDate
-    private LocalDate createdDate;
-
-    // 수정일
-    @Column(name = "updated_date", nullable = false)
-    @LastModifiedDate
-    private LocalDate updatedDate;
-
-    // payment (결제) 테이블 매핑 설정
-    @OneToMany(mappedBy = "subscribe")
-    private List<Payment> payments;
-
-    // delivery (배송) 테이블 매핑 설정
-    @OneToMany(mappedBy = "subscribe")
-    private List<Delivery> deliveries;
-
-    // exchagne (교환) 테이블 매핑 설정
-    @OneToMany(mappedBy = "subscribe")
-    private List<Exchange> exchanges;
 }
