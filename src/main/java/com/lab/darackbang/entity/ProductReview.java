@@ -2,6 +2,7 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.util.List;
@@ -42,9 +43,9 @@ public class ProductReview   extends AbstractAuditingEntity implements Serializa
     private String contents;
 
     // 삭제유무
-    @Builder.Default
+    @ColumnDefault("0")
     @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted = false;
+    private Boolean isDeleted;
 
     // 구매후기 이미지 매핑 설정
     @OneToMany(mappedBy = "productReview")

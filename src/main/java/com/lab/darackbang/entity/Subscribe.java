@@ -2,6 +2,7 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -54,9 +55,9 @@ public class Subscribe extends AbstractAuditingEntity implements Serializable {
     private LocalDate shippingDate;//2024.10.29/
 
     // 구독 상태 ( default 01 : 구독, 02 : 해지신청, 03: 구독해지, 04: 구독중지)
-    @Builder.Default
+    @ColumnDefault("'01'")
     @Column(name = "sub_state", nullable = false, length = 2)
-    private String subState = "01";
+    private String subState;
 
     // 구독중지일
     @Column(name = "suspend_date")

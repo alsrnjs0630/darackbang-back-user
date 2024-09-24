@@ -2,6 +2,7 @@ package com.lab.darackbang.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 
@@ -31,8 +32,8 @@ public class Notice extends AbstractAuditingEntity implements Serializable {
     private String contents;
 
     //삭제유무
-    @Builder.Default
+    @ColumnDefault("0")
     @Column(name = "is_delete", nullable = false)
-    private Boolean isDelete = false;
+    private Boolean isDelete;
 
 }

@@ -3,6 +3,7 @@ package com.lab.darackbang.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.io.Serializable;
 
@@ -29,8 +30,8 @@ public class CommonCode implements Serializable {
 
     // 사용여부 (default 1 : 사용, 0 : 미사용)
     @Column(name = "is_used", nullable = false, length = 1)
-    @Builder.Default
-    private Boolean isUsed = true;
+    @ColumnDefault("1")
+    private Boolean isUsed;
 
     // 그룹코드
     @Id
