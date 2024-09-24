@@ -9,5 +9,7 @@ import org.mapstruct.Mapping;
 public interface ProductImageMapper {
     ProductImageDTO toDTO(ProductImage productImage);
 
+
+    @Mapping(target = "product", ignore = true)
     ProductImage toEntity(ProductImageDTO productImageDTO);
 }

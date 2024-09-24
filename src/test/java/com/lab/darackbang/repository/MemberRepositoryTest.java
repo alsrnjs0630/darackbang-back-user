@@ -35,8 +35,6 @@ public class MemberRepositoryTest {
                     .gender("F")
                     .mobileNo("01028810137")
                     .mileage(0)
-                    .createdDate(LocalDate.now())
-                    .updatedDate(LocalDate.now())
                     .build();
             List<MemberRole> memberRoles = new ArrayList<>();
 

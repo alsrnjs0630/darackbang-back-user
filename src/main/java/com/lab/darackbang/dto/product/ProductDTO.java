@@ -67,7 +67,7 @@ public class ProductDTO implements Serializable {
     // 노출유무 (디폴트값 : 1)
     @NotNull
     @Schema(description = "노출유무", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Boolean inVisible;
+    private Boolean isVisible;
 
     // 제조사
     @NotNull
@@ -90,7 +90,7 @@ public class ProductDTO implements Serializable {
     @NotNull
     @Size(max = 50)
     @Schema(description = "원료명", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String meterial;
+    private String material;
 
     // 카테고리
     @NotNull
