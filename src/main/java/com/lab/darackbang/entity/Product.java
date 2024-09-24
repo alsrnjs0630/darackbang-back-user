@@ -3,6 +3,8 @@ package com.lab.darackbang.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -154,19 +156,12 @@ public class Product extends AbstractAuditingEntity implements Serializable {
     @ToString.Exclude
     private List<ProductReview> productReviews;
 
-    // 관심상품 테이블 매핑 설정
+    // 구독 테이블 매핑 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     @Transient
     @ToString.Exclude
     private List<Subscribe> subscribes;
-
-    // 구매상품 테이블 매핑 설정
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    @Transient
-    @ToString.Exclude
-    private List<OrderItem> orderItems;
 
     // 관심상품 테이블 매핑 설정
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

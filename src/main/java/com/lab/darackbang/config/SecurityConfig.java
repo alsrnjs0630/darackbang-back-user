@@ -3,6 +3,7 @@ package com.lab.darackbang.config;
 import com.lab.darackbang.security.handler.APILoginFailHandler;
 import com.lab.darackbang.security.handler.APILoginSuccessHandler;
 import com.lab.darackbang.security.handler.CustomAccessDeniedHandler;
+import com.lab.darackbang.security.handler.CustomLogoutSuccessHandler;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
@@ -13,7 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,10 +33,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    // Spring Security 필터 체인을 정의하는 Bean
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         log.info("스프링 시큐리티 설정");
+
         return http
                 // CORS 설정
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -53,16 +56,15 @@ public class SecurityConfig {
                         .successHandler(new APILoginSuccessHandler())  // 로그인 성공 시 핸들러
                         .failureHandler(new APILoginFailHandler()))  // 로그인 실패 시 핸들러
                 // 로그아웃 설정
-//                .logout(logout -> logout
-//                        .logoutUrl("/api/member/logout")  // 로그아웃 URL
-//                        .logoutRequestMatcher(new AntPathRequestMatcher("/api/member/logout", "POST")) // POST 방식으로 설정
-//                        .logoutSuccessUrl("/api/products/list")  // 로그아웃 성공 후 리디렉션
-//                        .addLogoutHandler((request, response, authentication) -> {
-//                            HttpSession session = request.getSession();
-//                            session.invalidate();  // 세션 무효화
-//                        })
-////                        .logoutSuccessHandler(new CustomLogoutSuccessHandler())
-//                        .deleteCookies("JSESSIONID", "access_token"))  // 쿠키 삭제
+                .logout(logout -> logout
+                        .logoutUrl("/api/member/logout")  // 로그아웃 URL
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/api/member/logout", "POST")) // POST 방식으로 설정
+                        .addLogoutHandler((request, response, authentication) -> {
+                            HttpSession session = request.getSession();
+                            session.invalidate();  // 세션 무효화
+                        })
+                        .logoutSuccessHandler(new CustomLogoutSuccessHandler())
+                        .deleteCookies("JSESSIONID", "access_token"))  // 쿠키 삭제
                 // 인증 요청에 대한 권한 설정
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/member/logout").permitAll()// 로그아웃 요청은 인증 없이 허용
@@ -74,17 +76,17 @@ public class SecurityConfig {
                 .build();
     }
 
-    // CORS 설정 Bean
+    // CORS(Cross-Origin Resource Sharing) 설정을 정의하는 Bean
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // 모든 도메인에서 요청 허용
+        // 모든 도메인에서의 요청 허용
         configuration.setAllowedOriginPatterns(List.of("*"));
         // 허용할 HTTP 메서드 설정
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
         // 허용할 HTTP 헤더 설정
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        // 자격 증면(쿠키 등) 허용 설정
+        // 자격 증명(쿠키 등) 허용 설정
         configuration.setAllowCredentials(true);
 
         // 설정한 CORS 규칙을 모든 경로에 적용

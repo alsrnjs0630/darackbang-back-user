@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @Slf4j
-@RequestMapping("/api")
+@RequestMapping("api")
 public class MemberController {
 
-    @PostMapping("/login")
-    public String join(Member member) {
-        log.info("Member joined: " + member);
-
-        return "redirect:/";
-    }
+//    @PostMapping("/member/login")
+//    public String join(Member member) {
+//        log.info("Member joined: " + member);
+//
+//        return "redirect:/";
+//    }
 
 }
