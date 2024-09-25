@@ -1,5 +1,6 @@
 package com.lab.darackbang.dto.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lab.darackbang.entity.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +25,7 @@ public class MemberRoleDTO implements Serializable {
      * 인덱스번호
      */
     @NotNull
+    @JsonIgnore
     @Schema(description = "인덱스번호",requiredMode = Schema.RequiredMode.REQUIRED)
     private Long id;
 
@@ -36,8 +38,7 @@ public class MemberRoleDTO implements Serializable {
 
     /**
      * 사용자 정보
-     */
     @NotNull
     @Schema(description = "회원정보",requiredMode = Schema.RequiredMode.REQUIRED)
-    private MemberDTO member;
+    private MemberDTO member;*/
 }

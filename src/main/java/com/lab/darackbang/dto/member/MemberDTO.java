@@ -1,13 +1,11 @@
 package com.lab.darackbang.dto.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lab.darackbang.entity.MemberRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -18,6 +16,7 @@ import java.util.List;
 @Setter
 @ToString
 @EqualsAndHashCode
+@Builder
 public class MemberDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -25,6 +24,7 @@ public class MemberDTO implements Serializable {
      * 인덱스번호
      */
     @NotNull
+    @JsonIgnore
     @Schema(description = "인덱스번호", required = true)
     private Long id;
 
@@ -38,6 +38,7 @@ public class MemberDTO implements Serializable {
 
     // 패스워드 ( not null, 크기 16, 특수문자 1개 이상 + 숫자 1개 이상 + 대소문자 구분 영문자 8자 이상 ~ 16자 이하 )
     @NotNull
+    @JsonIgnore
     @Size(max = 255)
     @Schema(description = "패스워드",requiredMode = Schema.RequiredMode.REQUIRED)
     private String password;
@@ -136,6 +137,7 @@ public class MemberDTO implements Serializable {
      * 삭제여부
      */
     @NotNull
+    @JsonIgnore
     @Schema(description = "삭제여부",requiredMode = Schema.RequiredMode.REQUIRED)
     private Boolean isDeleted;
 
@@ -143,11 +145,13 @@ public class MemberDTO implements Serializable {
      * 블랙컨슈머유무
      */
     @NotNull
+    @JsonIgnore
     @Schema(description = "블랙컨슈머유무",requiredMode = Schema.RequiredMode.REQUIRED)
     private Boolean isBlacklist;
 
     // 회원상태 (default 01 정상 : 02 탈퇴 : 03 탈퇴신청)
     @NotNull
+    @JsonIgnore
     @Size(max = 2)
     @Schema(description = "회원상태",requiredMode = Schema.RequiredMode.REQUIRED)
     private String memberState;
@@ -156,6 +160,7 @@ public class MemberDTO implements Serializable {
      * 등록일시
      */
     @NotNull
+    @JsonIgnore
     @Schema(description = "등록일시",requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDate createdDate;
 
@@ -163,8 +168,11 @@ public class MemberDTO implements Serializable {
      * 수정일시
      */
     @NotNull
+    @JsonIgnore
     @Schema(description = "수정일시",requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDate updatedDate;
 
+//    @JsonIgnore
     public List<MemberRoleDTO> memberRoles;
+
 }

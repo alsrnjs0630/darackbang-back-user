@@ -1,16 +1,12 @@
 package com.lab.darackbang.controller;
 
 import com.lab.darackbang.dto.member.MemberDTO;
-import com.lab.darackbang.entity.Member;
 import com.lab.darackbang.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,21 +15,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
-    private final PasswordEncoder passwordEncoder;
+
 
     @GetMapping("/member/join")
     public String joinPage() {
         return "회원가입 페이지";
     }
 
+    // 회원가입
     @PostMapping("/member/join")
-    @Transactional
-    public String join(MemberDTO memberDTO) {
-        String inputPw = passwordEncoder.encode(memberDTO.getPassword());
-        memberDTO.setPassword(inputPw);
-        memberService.join(memberDTO);
-        return "회원가입 성공";
+    public Map<String, String> join(MemberDTO memberDTO) {
+        return memberService.join(memberDTO);
     }
+
+    // 회원 상세정보
+    @GetMapping("/member/{id}")
+    public MemberDTO getMember(@PathVariable Long id) {
+        return memberService.read(id);
+    }
+
+
+
 
 
 }

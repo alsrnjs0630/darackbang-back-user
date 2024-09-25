@@ -5,12 +5,13 @@ import com.lab.darackbang.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = MemberRoleMapper.class)
+@Mapper(componentModel = "spring")
 public interface MemberMapper {
+
 
     MemberDTO toDTO(Member member);
 
-    @Mapping(source = "memberRoles", target = "memberRoles")
+    @Mapping(target = "memberRoles", ignore = true)
     @Mapping(target = "memberCard", ignore = true)
     @Mapping(target = "subscribes", ignore = true)
     @Mapping(target = "orderHistories", ignore = true)
