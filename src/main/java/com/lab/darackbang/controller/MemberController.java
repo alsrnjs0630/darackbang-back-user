@@ -34,7 +34,12 @@ public class MemberController {
         return memberService.read(id);
     }
 
-
+    @PutMapping("/member/{id}")
+    public Map<String,String> update(MemberDTO memberDTO, @PathVariable Long id) {
+        log.info("AddPostNo: " + memberDTO.getAddPostNo());
+        log.info("AddShippingAddr: " + memberDTO.getAddShippingAddr());
+        return memberService.update(memberDTO, id);
+    }
 
 
 
