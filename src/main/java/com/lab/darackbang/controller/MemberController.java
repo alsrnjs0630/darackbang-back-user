@@ -28,12 +28,13 @@ public class MemberController {
         return memberService.join(memberDTO);
     }
 
-    // 회원 상세정보
+    // 마이페이지 회원정보
     @GetMapping("/member/{id}")
     public MemberDTO getMember(@PathVariable Long id) {
         return memberService.read(id);
     }
 
+    // 마이페이지 회원정보 수정
     @PutMapping("/member/{id}")
     public Map<String,String> update(MemberDTO memberDTO, @PathVariable Long id) {
         log.info("AddPostNo: " + memberDTO.getAddPostNo());

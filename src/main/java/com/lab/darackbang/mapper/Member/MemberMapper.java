@@ -1,4 +1,4 @@
-package com.lab.darackbang.mapper;
+package com.lab.darackbang.mapper.Member;
 
 import com.lab.darackbang.dto.member.MemberDTO;
 import com.lab.darackbang.entity.Member;

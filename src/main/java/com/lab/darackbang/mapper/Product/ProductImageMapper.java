@@ -1,4 +1,4 @@
-package com.lab.darackbang.mapper;
+package com.lab.darackbang.mapper.Product;
 
 import com.lab.darackbang.dto.product.ProductImageDTO;
 import com.lab.darackbang.entity.ProductImage;

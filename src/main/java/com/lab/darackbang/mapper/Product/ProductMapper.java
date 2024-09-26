@@ -1,17 +1,9 @@
-package com.lab.darackbang.mapper;
+package com.lab.darackbang.mapper.Product;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lab.darackbang.dto.product.ProductDTO;
 import com.lab.darackbang.entity.*;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Transient;
-import lombok.ToString;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring", uses = {ProductImageMapper.class})
 public interface ProductMapper {
