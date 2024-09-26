@@ -30,7 +30,7 @@ public class LoginDTO extends User {
     // 관리자로그인ID
     @NotNull
     @Size(max = 120)
-    @Schema(description = "관리자로그인ID")
+    @Schema(description = "로그인ID")
     private String userEmail;
 
     // 패스워드

@@ -5,9 +5,8 @@ import com.lab.darackbang.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = MemberRoleMapper.class)
 public interface MemberMapper {
-
 
     MemberDTO toDTO(Member member);
 

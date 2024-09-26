@@ -16,7 +16,6 @@ import java.util.List;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Builder
 public class MemberDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -172,7 +171,7 @@ public class MemberDTO implements Serializable {
     @Schema(description = "수정일시",requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDate updatedDate;
 
-//    @JsonIgnore
+    @JsonIgnore
     public List<MemberRoleDTO> memberRoles;
 
 }

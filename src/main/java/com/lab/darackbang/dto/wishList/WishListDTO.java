@@ -1,5 +1,7 @@
 package com.lab.darackbang.dto.wishList;
 
+import com.lab.darackbang.entity.Member;
+import com.lab.darackbang.entity.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -22,8 +24,14 @@ public class WishListDTO {
     /*
     *  회원정보(회원아이디)
     */
+    @NotNull
+    @Schema(description = "회원아이디", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Member member;
 
     /*
     *  상품정보(상품아이디)
     * */
+    @NotNull
+    @Schema(description = "상품아이디", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Product product;
 }

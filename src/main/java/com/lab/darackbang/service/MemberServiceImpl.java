@@ -72,17 +72,17 @@ public class MemberServiceImpl implements MemberService {
             member.setGender(memberDTO.getGender());
         }
 
-        if (!Objects.equals(member.getPostNo(), memberDTO.getPostNo())) { // 주소 수정
+        if (!Objects.equals(member.getAddress(), memberDTO.getAddress())) { // 주소 수정
             member.setPostNo(memberDTO.getPostNo());
             member.setAddress(memberDTO.getAddress());
         }
 
-        if (!Objects.equals(member.getAddPostNo(), memberDTO.getAddPostNo())) { // 추가 배송지 수정
+        if (!Objects.equals(member.getAddShippingAddr(), memberDTO.getAddShippingAddr())) { // 추가 배송지 수정
             member.setAddPostNo(memberDTO.getAddPostNo());
             member.setAddShippingAddr(memberDTO.getAddShippingAddr());
         }
 
-        if (!Objects.equals(member.getShipPostNo(), memberDTO.getShipPostNo())) { // 기본 배송지 수정
+        if (!Objects.equals(member.getShippingAddr(), memberDTO.getShippingAddr())) { // 기본 배송지 수정
             member.setShipPostNo(memberDTO.getShipPostNo());
             member.setShippingAddr(memberDTO.getShippingAddr());
         }
@@ -99,6 +99,8 @@ public class MemberServiceImpl implements MemberService {
         Objects.equals() 사용: 이 메서드는 두 값이 동일한지 비교하며, 한쪽 또는 양쪽 모두 null인 경우에도 안전하게 처리합니다.
             즉, null.equals()로 인한 NullPointerException이 발생하지 않습니다.
         필드 비교: 각 필드를 비교할 때 Objects.equals()를 사용하여 null을 안전하게 처리한 후 변경된 값만 업데이트합니다.*/
+
+        log.debug("DTO : {}", memberDTO);
 
         memberRepository.save(member);
 

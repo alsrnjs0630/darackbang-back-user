@@ -10,7 +10,7 @@ public interface MemberRoleMapper {
 
     MemberRoleDTO toDTO(MemberRole memberRole);
 
-    @Mapping(source = "role", target = "role")
+
     @Mapping(target = "member", ignore = true) // 순환 참조 방지
     MemberRole toEntity(MemberRoleDTO memberRoleDTO);
 }
