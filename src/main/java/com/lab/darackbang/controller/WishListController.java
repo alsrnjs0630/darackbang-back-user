@@ -29,6 +29,6 @@ import java.util.Map;
     // 관심상품 삭제
     @DeleteMapping("/{id}")
     public Map<String, String> wishlistDelete(@PathVariable Long id) {
-        return null;
+        return wishlistService.delete(id);
     }
 }
