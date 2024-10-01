@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 // 로그인 설정
                 .formLogin(login -> login
-                        .loginPage("/api/member/login")  // 커스텀 로그인 페이지 설정
+                        .loginPage("/api/login")  // 커스텀 로그인 페이지 설정
                         .successHandler(new APILoginSuccessHandler())  // 로그인 성공 시 핸들러
                         .failureHandler(new APILoginFailHandler()))  // 로그인 실패 시 핸들러
                 // 로그아웃 설정
