@@ -67,7 +67,8 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID", "access_token"))  // 쿠키 삭제
                 // 인증 요청에 대한 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/member/logout", "/api/member/join").permitAll()// 로그아웃 요청은 인증 없이 허용
+                                .requestMatchers("/api/member/logout", "/api/member/join", "/api/member/searchpw", "/api/member/resetpw"
+                                ,"/api/member/emailcheck").permitAll()// 로그아웃 요청은 인증 없이 허용
                                 .requestMatchers("/api/products/**").permitAll()// 상품리스트 요청은 인증 없이 허용
                                 .requestMatchers("/api/member/**", "/api/wishlists/**").hasAnyRole("USER", "ADMIN","MANAGER")
                         /*.requestMatchers("/api/products/**").hasAnyRole("USER", "MANAGER","ADMIN") // 상품리스틑 요청은 해당롤만 허용 */)

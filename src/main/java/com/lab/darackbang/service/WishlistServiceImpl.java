@@ -1,11 +1,7 @@
 package com.lab.darackbang.service;
 
-
-import com.lab.darackbang.dto.member.MemberDTO;
-import com.lab.darackbang.dto.wishList.WishListDTO;
 import com.lab.darackbang.entity.Member;
 import com.lab.darackbang.entity.WishList;
-import com.lab.darackbang.mapper.WishlistMapper;
 import com.lab.darackbang.repository.MemberRepository;
 import com.lab.darackbang.repository.ProductRepository;
 import com.lab.darackbang.repository.WishListRepository;
@@ -16,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -28,7 +23,9 @@ public class WishlistServiceImpl implements WishlistService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
 
-    // 관심상품 등록
+    /*
+    * 관심상품 등록
+    * */
     @Override
     public Map<String, String> register(Long id) {
 
@@ -76,6 +73,9 @@ public class WishlistServiceImpl implements WishlistService {
         });
     }
 
+    /*
+    * 관심상품 삭제
+    * */
     @Override
     public Map<String, String> delete(Long id) {
 

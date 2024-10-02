@@ -29,19 +29,33 @@ public class MemberController {
     }
 
     // 마이페이지 회원정보
-    @GetMapping("/member/{id}")
-    public MemberDTO getMember(@PathVariable Long id) {
-        return memberService.read(id);
+    @GetMapping("/member/info")
+    public MemberDTO getMember() {
+        return memberService.read();
     }
 
     // 마이페이지 회원정보 수정
-    @PutMapping("/member/{id}")
-    public Map<String,String> update(MemberDTO memberDTO, @PathVariable Long id) {
-        log.info("AddPostNo: " + memberDTO.getAddPostNo());
-        log.info("AddShippingAddr: " + memberDTO.getAddShippingAddr());
-        return memberService.update(memberDTO, id);
+    @PutMapping("/member/info")
+    public Map<String,String> updateMember(MemberDTO memberDTO) {
+        return memberService.update(memberDTO);
     }
 
+    // 아이디 중복 검사
+    @PostMapping("/member/emailcheck")
+    public Map<String,String> emailCheck(String userEmail) {
+        log.info("입력한 회원 이메일 컨트롤러 : " + userEmail);
+        return memberService.eamilCheck(userEmail);
+    }
 
+    // 비밀번호 찾기
+    @PostMapping("/member/searchpw")
+    public Map<String,String> searchpw(String userEmail, String birthday) {
+        return memberService.searchPw(userEmail,birthday);
+    }
 
+    // 비밀번호 재설정
+    @PostMapping("/member/resetpw")
+    public Map<String,String> resetpw(String userEmail, String password, String passwordCheck) {
+        return memberService.resetPw(userEmail,password,passwordCheck);
+    }
 }
