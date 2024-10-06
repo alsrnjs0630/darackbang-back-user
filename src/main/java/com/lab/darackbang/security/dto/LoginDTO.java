@@ -51,21 +51,22 @@ public class LoginDTO extends User {
     private List<String> roleNames = new ArrayList<>();
 
     public LoginDTO(String userEmail, String password, String name, List<String> roleNames) {
-        super(userEmail, password, roleNames.stream().map(role ->
+        super(userEmail, password == null ? "" : password, roleNames.stream().map(role ->
                 new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toList()));
 
         this.userEmail = userEmail;
-        this.password = password;
-        this.name = name;
+        this.password = password == null ? "" : password;
+        this.name = name == null ? "" : name;
         this.roleNames = roleNames;
     }
 
+    // JWT 토큰 PayLoad에 넣을 내용 ( 유저이메일, 이름, 권한 )
     public Map<String, Object> getClaims() {
         Map<String, Object> dataMap = new HashMap<>();
 
         dataMap.put("email", userEmail);
         dataMap.put("password", password);
-        dataMap.put("nickname", name);
+        dataMap.put("name", name);
         dataMap.put("roleNames", roleNames);
         return dataMap;
     }

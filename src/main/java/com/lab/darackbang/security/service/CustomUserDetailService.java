@@ -58,7 +58,7 @@ public class CustomUserDetailService implements UserDetailsService {
                 // 사용자의 역할 목록을 문자열 리스트로 반환
                 member.getMemberRoles().stream()
                         .map(role -> role.getRole().toString())
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()) // collect()는 스트림에서 처리된 데이터를 최종적으로 리스트나 집합 같은 형태로 모으는 작업
         );
     }
 

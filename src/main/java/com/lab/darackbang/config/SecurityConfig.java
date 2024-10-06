@@ -1,5 +1,7 @@
 package com.lab.darackbang.config;
 
+import com.lab.darackbang.common.utils.JWTUtil;
+import com.lab.darackbang.security.filter.JWTCheckFilter;
 import com.lab.darackbang.security.handler.APILoginFailHandler;
 import com.lab.darackbang.security.handler.APILoginSuccessHandler;
 import com.lab.darackbang.security.handler.CustomAccessDeniedHandler;
@@ -19,6 +21,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -34,6 +37,8 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private JWTUtil jwtUtil = new JWTUtil();
+
     // Spring Security 필터 체인을 정의하는 Bean
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -45,12 +50,11 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // 세션 관리 설정 (JWT 사용 및 세션 상태 없음으로 설정)
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // 세션을 상태 없음으로 설정 (JWT 사용을 위해)
-                        .maximumSessions(1)  // 동시에 하나의 세션만 허용
-                        .expiredUrl("/login?expired"))  // 세션 만료 시 리디렉션할 URL
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // 세션을 상태 없음으로 설정 (JWT 사용을 위해)
                 // CSRF 방지 비활성화 (JWT 방식에서 보통 사용하지 않음)
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf().disable() // csrf()는 버전 6.1 이상에서 삭제 되기 때문에 빨간 줄 생김. 실행엔 지장 없음.
                 // 로그인 설정
+                .addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
                 .formLogin(login -> login
                         .loginPage("/api/login")  // 커스텀 로그인 페이지 설정
                         .successHandler(new APILoginSuccessHandler())  // 로그인 성공 시 핸들러
@@ -59,10 +63,6 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/api/member/logout")  // 로그아웃 URL
                         .logoutRequestMatcher(new AntPathRequestMatcher("/api/member/logout", "POST")) // POST 방식으로 설정
-                        .addLogoutHandler((request, response, authentication) -> {
-                            HttpSession session = request.getSession();
-                            session.invalidate();  // 세션 무효화
-                        })
                         .logoutSuccessHandler(new CustomLogoutSuccessHandler())
                         .deleteCookies("JSESSIONID", "access_token"))  // 쿠키 삭제
                 // 인증 요청에 대한 권한 설정
@@ -71,6 +71,7 @@ public class SecurityConfig {
                                 ,"/api/member/emailcheck").permitAll()// 로그아웃 요청은 인증 없이 허용
                                 .requestMatchers("/api/products/**").permitAll()// 상품리스트 요청은 인증 없이 허용
                                 .requestMatchers("/api/member/**", "/api/wishlists/**").hasAnyRole("USER", "ADMIN","MANAGER")
+
                         /*.requestMatchers("/api/products/**").hasAnyRole("USER", "MANAGER","ADMIN") // 상품리스틑 요청은 해당롤만 허용 */)
                 // 예외 처리 설정
                 .exceptionHandling(exceptions -> exceptions
