@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // 세션을 상태 없음으로 설정 (JWT 사용을 위해)
                 // CSRF 방지 비활성화 (JWT 방식에서 보통 사용하지 않음)
-                .csrf().disable() // csrf()는 버전 6.1 이상에서 삭제 되기 때문에 빨간 줄 생김. 실행엔 지장 없음.
+                .csrf(AbstractHttpConfigurer::disable)
                 // 로그인 설정
                 .addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
                 .formLogin(login -> login
@@ -62,7 +62,12 @@ public class SecurityConfig {
                 // 로그아웃 설정
                 .logout(logout -> logout
                         .logoutUrl("/api/member/logout")  // 로그아웃 URL
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/api/member/logout", "POST")) // POST 방식으로 설정
+                        .addLogoutHandler((request, response, authentication) -> {
+                            // Clear the authentication information
+                            HttpSession session = request.getSession();
+                            session.invalidate();  // 세션 무효화
+                        })
+                        .clearAuthentication(true)
                         .logoutSuccessHandler(new CustomLogoutSuccessHandler())
                         .deleteCookies("JSESSIONID", "access_token"))  // 쿠키 삭제
                 // 인증 요청에 대한 권한 설정

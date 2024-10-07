@@ -1,4 +1,4 @@
-package com.lab.darackbang.mapper.Member;
+package com.lab.darackbang.mapper.member;
 
 import com.lab.darackbang.dto.member.MemberDTO;
 import com.lab.darackbang.entity.Member;
@@ -18,7 +18,7 @@ public interface MemberMapper {
     @Mapping(target = "qandas", ignore = true)
     @Mapping(target = "wishlists", ignore = true)
     @Mapping(target = "productReviews", ignore = true)
-    @Mapping(target = "payments", ignore = true)
+    @Mapping(target = "orders", ignore = true)
     Member toEntity(MemberDTO memberDTO);
 }
 

@@ -22,7 +22,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/list")
-    public PageDTO<ProductDTO> list(@ModelAttribute ProductSearchDTO productSearchDTO,
+    public PageDTO<ProductDTO,ProductSearchDTO> list(@ModelAttribute ProductSearchDTO productSearchDTO,
                                     @PageableDefault(size = 10, sort = "pno", direction = Sort.Direction.DESC) Pageable pageable) {
         return productService.findAll(productSearchDTO, pageable);
     }

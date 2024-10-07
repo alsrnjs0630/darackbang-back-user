@@ -24,12 +24,12 @@ public class WishList extends AbstractAuditingEntity implements Serializable {
     private Long id;
 
     // 회원아이디
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     // 상품아이디
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 

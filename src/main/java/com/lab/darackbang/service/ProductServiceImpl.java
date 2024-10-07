@@ -6,7 +6,7 @@ import com.lab.darackbang.dto.product.ProductDTO;
 import com.lab.darackbang.dto.product.ProductSearchDTO;
 import com.lab.darackbang.entity.Product;
 import com.lab.darackbang.mapper.PageMapper;
-import com.lab.darackbang.mapper.Product.ProductMapper;
+import com.lab.darackbang.mapper.product.ProductMapper;
 import com.lab.darackbang.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     @Transactional(readOnly = true)
-    public PageDTO<ProductDTO> findAll(ProductSearchDTO searchDTO, Pageable pageable) {
+    public PageDTO<ProductDTO,ProductSearchDTO> findAll(ProductSearchDTO searchDTO, Pageable pageable) {
         // ProductSearchDTO에 기반하여 Specification<Product> 객체 생성
         Specification<Product> spec = ProductCriteria.byCriteria(searchDTO);
 
@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
         int pageNumber = (pageable.getPageNumber() < 1) ? 0 : pageable.getPageNumber() - 1;
         Pageable correctedPageable = PageRequest.of(pageNumber, pageable.getPageSize(), pageable.getSort());
         // JPA 리포지토리를 사용하여 페이징을 적용한 상품 목록 조회 후, ProductMapper를 통해 ProductDTO로 변환 후 Page객체 생성
-        return pageMapper.toDTO(productRepository.findAll(spec, correctedPageable).map(productMapper::toDTO));
+        return pageMapper.toDTO(productRepository.findAll(spec, correctedPageable).map(productMapper::toDTO),searchDTO);
     }
 
 }

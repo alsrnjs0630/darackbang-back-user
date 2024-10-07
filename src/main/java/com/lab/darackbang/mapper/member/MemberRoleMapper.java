@@ -1,4 +1,4 @@
-package com.lab.darackbang.mapper.Member;
+package com.lab.darackbang.mapper.member;
 
 import com.lab.darackbang.dto.member.MemberRoleDTO;
 import com.lab.darackbang.entity.MemberRole;
@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 public interface MemberRoleMapper {
 
     MemberRoleDTO toDTO(MemberRole memberRole);
-
 
     @Mapping(target = "member", ignore = true) // 순환 참조 방지
     MemberRole toEntity(MemberRoleDTO memberRoleDTO);

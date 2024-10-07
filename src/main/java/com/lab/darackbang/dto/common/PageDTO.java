@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class PageDTO<E> implements Serializable {
+public class PageDTO<E,S> implements Serializable {
 
     /**
      * 현재 페이지에 표시될 콘텐츠 목록입니다.
@@ -62,4 +62,6 @@ public class PageDTO<E> implements Serializable {
      * 현재 페이지 번호입니다.
      */
     private Integer currentPage;
+
+    private S search;
 }

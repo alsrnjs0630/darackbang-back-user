@@ -1,6 +1,5 @@
 package com.lab.darackbang.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,7 +27,7 @@ public class MemberRole extends AbstractAuditingEntity implements Serializable {
     @Column(name = "role", nullable = false, length = 7)
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     @ToString.Exclude
     private Member member;

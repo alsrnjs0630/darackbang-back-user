@@ -8,5 +8,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 public interface ProductService {
-    PageDTO<ProductDTO> findAll(ProductSearchDTO searchDTO, Pageable pageable);
+    PageDTO<ProductDTO,ProductSearchDTO> findAll(ProductSearchDTO searchDTO, Pageable pageable);
 }
