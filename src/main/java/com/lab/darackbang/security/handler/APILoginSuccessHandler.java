@@ -49,15 +49,10 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
                 .map(role -> role.replace("ROLE_", "")) // "ROLE_" 접두사를 제거
                 .collect(Collectors.toList()); // List<String>으로 변환
 
-        // 사용자 정보로 JWT 생성
+        // 사용자 정보 생성
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", loginDTO.getUsername());
-//        claims.put("name", loginDTO.getName());
         claims.put("roleNames", roleNamesWithoutPrefix);
-
-        // 사용자 정보
-//        Gson gson = new Gson();
-//        String jsonStr = gson.toJson(claims);
 
         // 10분짜리 JWT 생성
         String token = jwtUtil.generateToken(claims, 10);

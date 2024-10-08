@@ -36,7 +36,7 @@ public class MemberController {
 
     // 마이페이지 회원정보 수정
     @PutMapping("/member/info")
-    public Map<String,String> updateMember(MemberDTO memberDTO) {
+    public Map<String,String> updateMember(@RequestBody MemberDTO memberDTO) {
         return memberService.update(memberDTO);
     }
 

@@ -150,7 +150,6 @@ public class MemberDTO implements Serializable {
 
     // 회원상태 (default 01 정상 : 02 탈퇴 : 03 탈퇴신청)
     @NotNull
-    @JsonIgnore
     @Size(max = 2)
     @Schema(description = "회원상태",requiredMode = Schema.RequiredMode.REQUIRED)
     private String memberState;
