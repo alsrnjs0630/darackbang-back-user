@@ -1,5 +1,6 @@
 package com.lab.darackbang.service;
 
+import com.lab.darackbang.common.utils.CustomFileUtil;
 import com.lab.darackbang.criteria.ProductCriteria;
 import com.lab.darackbang.dto.common.PageDTO;
 import com.lab.darackbang.dto.product.ProductDTO;
@@ -9,9 +10,11 @@ import com.lab.darackbang.mapper.PageMapper;
 import com.lab.darackbang.mapper.product.ProductMapper;
 import com.lab.darackbang.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 
     private final PageMapper  pageMapper;
+    private final CustomFileUtil customFileUtil;
+
     /**
      * 주어진 검색 조건 및 페이징 정보를 기반으로 모든 제품 목록을 조회합니다.
      *
@@ -44,6 +49,11 @@ public class ProductServiceImpl implements ProductService {
         Pageable correctedPageable = PageRequest.of(pageNumber, pageable.getPageSize(), pageable.getSort());
         // JPA 리포지토리를 사용하여 페이징을 적용한 상품 목록 조회 후, ProductMapper를 통해 ProductDTO로 변환 후 Page객체 생성
         return pageMapper.toDTO(productRepository.findAll(spec, correctedPageable).map(productMapper::toDTO),searchDTO);
+    }
+
+    @Override
+    public ResponseEntity<Resource> getFile(String fileName) {
+        return customFileUtil.getFile(fileName);
     }
 
 }
