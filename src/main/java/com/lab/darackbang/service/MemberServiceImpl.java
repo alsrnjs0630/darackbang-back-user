@@ -111,6 +111,10 @@ public class MemberServiceImpl implements MemberService {
             member.setPhoneNo(memberDTO.getPhoneNo());
         }
 
+        if (!Objects.equals(member.getMemberState(), memberDTO.getMemberState())) { // 회원상태 수정
+            member.setMemberState(memberDTO.getMemberState());
+        }
+
         /*
         Objects.equals() 사용: 이 메서드는 두 값이 동일한지 비교하며, 한쪽 또는 양쪽 모두 null인 경우에도 안전하게 처리합니다.
             즉, null.equals()로 인한 NullPointerException이 발생하지 않습니다.
