@@ -27,8 +27,13 @@ public class ProductController {
 
     @GetMapping("/list")
     public PageDTO<ProductDTO,ProductSearchDTO> list(@ModelAttribute ProductSearchDTO productSearchDTO,
-                                    @PageableDefault(size = 10, sort = "pno", direction = Sort.Direction.DESC) Pageable pageable) {
+                                    @PageableDefault(size = 12, sort = "pno", direction = Sort.Direction.DESC) Pageable pageable) {
         return productService.findAll(productSearchDTO, pageable);
+    }
+
+    @GetMapping("/{id}")
+    public ProductDTO get(@PathVariable Long id) {
+        return productService.findOne(id);
     }
 
     /**

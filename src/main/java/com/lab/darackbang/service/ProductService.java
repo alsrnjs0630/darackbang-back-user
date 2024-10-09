@@ -12,5 +12,7 @@ import org.springframework.stereotype.Service;
 public interface ProductService {
     PageDTO<ProductDTO,ProductSearchDTO> findAll(ProductSearchDTO searchDTO, Pageable pageable);
 
+    ProductDTO findOne(Long id);
+
     ResponseEntity<Resource> getFile(String fileName);
 }

@@ -52,6 +52,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductDTO findOne(Long id) {
+        return productRepository.findById(id).map(productMapper::toDTO).orElse(null);
+    }
+
+    @Override
     public ResponseEntity<Resource> getFile(String fileName) {
         return customFileUtil.getFile(fileName);
     }
