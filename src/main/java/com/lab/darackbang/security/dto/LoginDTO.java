@@ -48,9 +48,15 @@ public class LoginDTO extends User {
     // 회원권한
     @NotNull
     @Schema(description = "회원롤정보", requiredMode = Schema.RequiredMode.REQUIRED)
-    private List<String> roleNames = new ArrayList<>();
+    private List<String> roleNames;
 
-    public LoginDTO(String userEmail, String password, String name, List<String> roleNames) {
+    // 회원상태
+    @NotNull
+    @Size(max = 2)
+    @Schema(description = "회원상태", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String memberState;
+
+    public LoginDTO(String userEmail, String password, String name, List<String> roleNames, String memberState) {
         super(userEmail, password == null ? "" : password, roleNames.stream().map(role ->
                 new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toList()));
 
@@ -58,6 +64,7 @@ public class LoginDTO extends User {
         this.password = password == null ? "" : password;
         this.name = name == null ? "" : name;
         this.roleNames = roleNames;
+        this.memberState = memberState;
     }
 
     // JWT 토큰 PayLoad에 넣을 내용 ( 유저이메일, 이름, 권한 )
@@ -68,6 +75,7 @@ public class LoginDTO extends User {
         dataMap.put("password", password);
         dataMap.put("name", name);
         dataMap.put("roleNames", roleNames);
+        dataMap.put("memberState", memberState);
         return dataMap;
     }
 

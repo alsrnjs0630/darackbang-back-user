@@ -59,7 +59,7 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // JWT를 응답으로 전송
         response.setContentType("application/json; charset=utf-8");
-        response.getWriter().write("{\"token\":\"" + token + "\"}");
+        response.getWriter().write("{\"token\":\"" + token + "\" , \"memberState\":\"" + loginDTO.getMemberState() + "\"}");
 //        response.getWriter().print(jsonStr);
 
     }

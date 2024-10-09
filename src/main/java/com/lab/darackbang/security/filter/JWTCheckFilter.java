@@ -44,7 +44,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
                 log.info("권한이름 : " + claims.get("roleNames"));
 
                 // 사용자 인증 객체 생성 및 건텍스트 설정
-                LoginDTO userDetails = new LoginDTO((String) claims.get("email"), "" , "", roles);
+                LoginDTO userDetails = new LoginDTO((String) claims.get("email"), "" , "", roles, (String) claims.get("memberState"));
 
                 log.info("유저디테일: " + userDetails);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
