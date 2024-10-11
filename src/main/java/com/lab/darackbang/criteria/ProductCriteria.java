@@ -27,8 +27,11 @@ public class ProductCriteria {
 
             //검색 필터 조건이 있으면 아래 추가함.
 
-            //삭제 처리된 상품은 조회 대상에서 제외
+            // 삭제 여부가 false인 상품만 조회
             spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("isDeleted"),false));
+
+            // 노출 여부가 true인 상품만 조회
+            spec = spec.and((root1, query1, cb) -> cb.equal(root1.get("isVisible"),true));
 
             return spec.toPredicate(root, query, criteriaBuilder);
         };
