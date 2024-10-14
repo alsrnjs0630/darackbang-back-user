@@ -122,8 +122,8 @@ public class Member extends AbstractAuditingEntity implements Serializable {
     private List<Order> orderHistories;
 
     // 장바구니 테이블 (cart) 매핑 설정
-    @OneToMany(mappedBy = "member")
-    private List<Cart> carts;
+    @OneToOne(mappedBy = "member")
+    private Cart cart;
 
     // QandA 테이블 (qanda) 매핑 설정
     @OneToMany(mappedBy = "member")
