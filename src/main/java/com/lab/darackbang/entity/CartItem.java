@@ -40,4 +40,9 @@ public class CartItem extends AbstractAuditingEntity implements Serializable {
     @Column(name = "product_price", nullable = false)
     private Integer productPrice;
 
+
+    public void updateQuantity (Integer quantity){
+        this.quantity += quantity;
+    }
+
 }
