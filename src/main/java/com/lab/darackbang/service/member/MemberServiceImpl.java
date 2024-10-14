@@ -1,4 +1,4 @@
-package com.lab.darackbang.service;
+package com.lab.darackbang.service.member;
 
 import com.lab.darackbang.dto.member.MemberDTO;
 import com.lab.darackbang.entity.Member;

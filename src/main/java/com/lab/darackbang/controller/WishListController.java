@@ -1,8 +1,7 @@
 package com.lab.darackbang.controller;
 
-import com.lab.darackbang.dto.wishList.WishListDTO;
 import com.lab.darackbang.repository.WishListRepository;
-import com.lab.darackbang.service.WishlistService;
+import com.lab.darackbang.service.wishlist.WishlistService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

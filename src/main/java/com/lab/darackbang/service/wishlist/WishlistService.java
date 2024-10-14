@@ -1,6 +1,4 @@
-package com.lab.darackbang.service;
-
-import com.lab.darackbang.dto.wishList.WishListDTO;
+package com.lab.darackbang.service.wishlist;
 
 import java.util.Map;
 

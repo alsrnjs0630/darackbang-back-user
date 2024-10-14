@@ -1,7 +1,7 @@
 package com.lab.darackbang.controller;
 
 import com.lab.darackbang.dto.member.MemberDTO;
-import com.lab.darackbang.service.MemberService;
+import com.lab.darackbang.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

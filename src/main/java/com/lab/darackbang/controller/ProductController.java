@@ -3,16 +3,14 @@ package com.lab.darackbang.controller;
 import com.lab.darackbang.dto.common.PageDTO;
 import com.lab.darackbang.dto.product.ProductDTO;
 import com.lab.darackbang.dto.product.ProductSearchDTO;
-import com.lab.darackbang.service.ProductService;
+import com.lab.darackbang.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;

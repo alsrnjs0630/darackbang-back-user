@@ -1,4 +1,4 @@
-package com.lab.darackbang.service;
+package com.lab.darackbang.service.product;
 
 import com.lab.darackbang.common.utils.CustomFileUtil;
 import com.lab.darackbang.criteria.ProductCriteria;

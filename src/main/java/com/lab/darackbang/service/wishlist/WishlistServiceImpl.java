@@ -1,4 +1,4 @@
-package com.lab.darackbang.service;
+package com.lab.darackbang.service.wishlist;
 
 import com.lab.darackbang.entity.Member;
 import com.lab.darackbang.entity.WishList;
