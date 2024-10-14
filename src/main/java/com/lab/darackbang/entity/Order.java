@@ -1,5 +1,6 @@
 package com.lab.darackbang.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Table(name = "tbl_order")
 public class Order extends AbstractAuditingEntity implements Serializable {
 
@@ -34,12 +34,13 @@ public class Order extends AbstractAuditingEntity implements Serializable {
     private LocalDate orderDate;
 
     //orderItems 매핑 설정
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
+    @JsonIgnoreProperties("order")  // 순환 참조 방지
     private List<OrderItem> orderItems;
 
     // 회원아이디
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 }
