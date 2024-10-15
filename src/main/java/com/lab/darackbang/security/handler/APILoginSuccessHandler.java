@@ -41,8 +41,12 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         // 10분짜리 JWT 생성
         String token = JWTUtil.generateToken(claims, 10);
 
+        claims.put("token", token);
+        claims.put("memberState", loginDTO.getMemberState());
+        Gson gson = new Gson();
+
         // JWT를 응답으로 전송
         response.setContentType("application/json; charset=utf-8");
-        response.getWriter().write("{\"token\":\"" + token + "\" , \"memberState\":\"" + loginDTO.getMemberState() + "\"}");
+        response.getWriter().write(gson.toJson(claims));
     }
 }
