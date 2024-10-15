@@ -64,7 +64,7 @@ public class CartServiceImpl implements CartService {
                                     CartItem newCartItem = new CartItem();
                                     newCartItem.setCart(newCart);
                                     newCartItem.setProduct(product);
-                                    newCartItem.setProductPrice(product.getSalePrice());
+                                    newCartItem.setProductPrice(product.getSalePrice()*request.getQuantity());
                                     newCartItem.setQuantity(request.getQuantity());
                                     newCartItemList.add(newCartItem);
 
@@ -89,7 +89,7 @@ public class CartServiceImpl implements CartService {
                                         newCartItem.setCart(existMember.getCart());
                                         newCartItem.setProduct(product);
                                         newCartItem.setQuantity(request.getQuantity());
-                                        newCartItem.setProductPrice(product.getSalePrice());
+                                        newCartItem.setProductPrice(product.getSalePrice()*request.getQuantity());
                                         existMember.getCart().getCartItems().add(newCartItem);
                                     }
 
@@ -102,12 +102,13 @@ public class CartServiceImpl implements CartService {
         }
         return Map.of("RESULT", "SUCCESS");
     }
+
     //장바구니아이템 삭제
     @Override
     public void deleteCartItem(Member member, CartItem cartItem) {
         CartItem cartItems = findCartItem(cartItem.getId());
         checkCart(member, cartItems);
-        cartRepository.delete(cartItems.getCart());
+        cartItemRepository.delete(cartItems);
     }
 
     private CartItem findCartItem(Long id) {

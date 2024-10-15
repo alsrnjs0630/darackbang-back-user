@@ -37,10 +37,11 @@ public class CartController {
     }
 
     // 장바구니 아이템 삭제
-    @DeleteMapping("/delete/{cartItemId}")
+    @DeleteMapping("/itemdelete/{cartItemId}")
     public ResponseEntity<Void> deleteCartItem(@PathVariable Long cartItemId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginDTO loginDTO = (LoginDTO) authentication.getPrincipal();
+
         if (loginDTO != null) {
             Member member = memberRepository.findByUserEmail(loginDTO.getUserEmail())
                     .orElseThrow(() -> new NoSuchElementException("Member Not Found"));

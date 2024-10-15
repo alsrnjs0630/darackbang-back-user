@@ -1,5 +1,6 @@
 package com.lab.darackbang.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +42,7 @@ public class ProductImage implements Serializable {
     //@ManyToOne(fetch = FetchType.LAZY): Product에서 ProductImage를 접근할 때만 지연 로딩
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
+    @JsonIgnore
     @ToString.Exclude
     private Product product;
 }

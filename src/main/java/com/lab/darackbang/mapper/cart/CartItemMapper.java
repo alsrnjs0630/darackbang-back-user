@@ -18,5 +18,6 @@ public interface CartItemMapper {
     @AfterMapping
     default void calledWithSourceAndTarget(CartItem cartItem, @MappingTarget CartItemDTO cartItemDTO) {
         cartItemDTO.setProductName(cartItem.getProduct().getProductName());
+        cartItemDTO.setProductImages(cartItem.getProduct().getProductImages());
     }
 }
