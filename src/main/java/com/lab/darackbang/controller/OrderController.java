@@ -1,44 +1,24 @@
 package com.lab.darackbang.controller;
 
-
-import com.lab.darackbang.dto.Order.OrderDTO;
-import com.lab.darackbang.entity.Order;
-import com.lab.darackbang.entity.OrderItem;
-import com.lab.darackbang.repository.CartItemRepository;
-import com.lab.darackbang.repository.OrderRepository;
+import com.lab.darackbang.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/orders")
 @Slf4j
 public class OrderController {
-    private final OrderRepository orderRepository;
-    private final CartItemRepository cartItemRepository;
 
-    @GetMapping
-    public Order addOrder(List<Long> cartItemIds) {
-        Order order = new Order();
-        List<OrderItem> orderItems = new ArrayList<>();
+    private final OrderService orderService;
 
-        cartItemRepository.findAllById(cartItemIds).forEach(cartItem -> {
-           order.setOrderDate(LocalDate.now());
-           order.setTotalOrderPrice(
-                   order.getTotalOrderPrice() == null ? 0 : order.getTotalOrderPrice() + (cartItem.getProductPrice() * cartItem.getQuantity())
-           );
-          // order.setMember();
-
-        });
-
-        return null;
+    @PostMapping("/add")
+    public Map<String, String> orderAdd (@RequestBody List<Long> cartItemIds) {
+        log.info("구매내역 컨트롤러 접근 성공");
+        return orderService.registerOrder(cartItemIds);
     }
 }
