@@ -99,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
                 }, () -> {
                     AgeYearStat ageYearStat = new AgeYearStat();
                     ageYearStat.setAgeGroup(order.getMember().getAgeGroup());
-                    ageYearStat.setYear(order.getMember().getAgeGroup());
+                    ageYearStat.setYear(year);
                     ageYearStat.setSaleTotalPrice(order.getTotalOrderPrice());
                     ageYearStatService.create(ageYearStat);
                 }
@@ -112,7 +112,7 @@ public class OrderServiceImpl implements OrderService {
                 }, () -> {
                     AgeQuarterStat ageQuarterStat = new AgeQuarterStat();
                     ageQuarterStat.setAgeGroup(order.getMember().getAgeGroup());
-                    ageQuarterStat.setYear(order.getMember().getAgeGroup());
+                    ageQuarterStat.setYear(year);
                     ageQuarterStat.setQuarter(quarter);
                     ageQuarterStat.setSaleTotalPrice(order.getTotalOrderPrice());
                     ageQuarterStatService.create(ageQuarterStat);
@@ -126,7 +126,7 @@ public class OrderServiceImpl implements OrderService {
                 }, () -> {
                     AgeMonthStat ageMonthStat = new AgeMonthStat();
                     ageMonthStat.setAgeGroup(order.getMember().getAgeGroup());
-                    ageMonthStat.setYear(order.getMember().getAgeGroup());
+                    ageMonthStat.setYear(year);
                     ageMonthStat.setMonth(month);
                     ageMonthStat.setSaleTotalPrice(order.getTotalOrderPrice());
                     ageMonthStatService.create(ageMonthStat);
@@ -145,7 +145,7 @@ public class OrderServiceImpl implements OrderService {
                         ProductYearStat productYearStat = new ProductYearStat();
                         productYearStat.setPno(orderItem.getProduct().getPno());
                         productYearStat.setProductName(orderItem.getProduct().getProductName());
-                        productYearStat.setYear(orderItem.getProduct().getProductName());
+                        productYearStat.setYear(year);
                         productYearStat.setSaleTotalPrice(orderItem.getProductPrice());
                         productYearStatService.create(productYearStat);
                     }
@@ -162,7 +162,8 @@ public class OrderServiceImpl implements OrderService {
                         ProductQuarterStat productQuarterStat = new ProductQuarterStat();
                         productQuarterStat.setPno(orderItem.getProduct().getPno());
                         productQuarterStat.setProductName(orderItem.getProduct().getProductName());
-                        productQuarterStat.setYear(orderItem.getProduct().getProductName());
+                        productQuarterStat.setYear(year);
+                        productQuarterStat.setQuarter(quarter);
                         productQuarterStat.setSaleTotalPrice(orderItem.getProductPrice());
                         productQuarterStatService.create(productQuarterStat);
                     }
@@ -178,7 +179,8 @@ public class OrderServiceImpl implements OrderService {
                         ProductMonthStat productMonthStat = new ProductMonthStat();
                         productMonthStat.setPno(orderItem.getProduct().getPno());
                         productMonthStat.setProductName(orderItem.getProduct().getProductName());
-                        productMonthStat.setYear(orderItem.getProduct().getProductName());
+                        productMonthStat.setYear(year);
+                        productMonthStat.setMonth(month);
                         productMonthStat.setSaleTotalPrice(orderItem.getProductPrice());
                         productMonthStatService.create(productMonthStat);
                     }
