@@ -1,17 +1,13 @@
 package com.lab.darackbang.config;
 
-import com.lab.darackbang.common.utils.JWTUtil;
 import com.lab.darackbang.security.filter.JWTCheckFilter;
 import com.lab.darackbang.security.handler.APILoginFailHandler;
 import com.lab.darackbang.security.handler.APILoginSuccessHandler;
 import com.lab.darackbang.security.handler.CustomAccessDeniedHandler;
 import com.lab.darackbang.security.handler.CustomLogoutSuccessHandler;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSessionEvent;
-import jakarta.servlet.http.HttpSessionListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -22,8 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -36,8 +30,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
-
-    private JWTUtil jwtUtil = new JWTUtil();
 
     // Spring Security 필터 체인을 정의하는 Bean
     @Bean
@@ -73,10 +65,9 @@ public class SecurityConfig {
                 // 인증 요청에 대한 권한 설정
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/member/logout", "/api/member/join", "/api/member/searchpw", "/api/member/resetpw"
-                                ,"/api/member/emailcheck").permitAll()// 로그아웃 요청은 인증 없이 허용
+                                        , "/api/member/emailcheck").permitAll()// 로그아웃 요청은 인증 없이 허용
                                 .requestMatchers("/api/products/**").permitAll()// 상품리스트 요청은 인증 없이 허용
-                                .requestMatchers("/api/member/**", "/api/wishlists/**", "/api/carts/**").hasAnyRole("USER", "ADMIN","MANAGER")
-
+                                .requestMatchers("/api/member/**", "/api/wishlists/**", "/api/carts/**").hasAnyRole("USER", "ADMIN", "MANAGER")
                         /*.requestMatchers("/api/products/**").hasAnyRole("USER", "MANAGER","ADMIN") // 상품리스틑 요청은 해당롤만 허용 */)
                 // 예외 처리 설정
                 .exceptionHandling(exceptions -> exceptions
@@ -108,29 +99,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    // 세션 이벤트를 처리하고 세션의 상태를 추적하는 Bean (HttpSessionEventPublisher 사용)
-    @Bean
-    public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
-        return new ServletListenerRegistrationBean<>(new HttpSessionEventPublisher());
-    }
-
-    // 세션 생성 및 종료 시 동작을 정의하는 HttpSessionListener Bean
-    @Bean
-    public HttpSessionListener httpSessionListener() {
-        return new HttpSessionListener() {
-            // 세션 생성 시 타임아웃 설정 (1800초 = 30분)
-            @Override
-            public void sessionCreated(HttpSessionEvent se) {
-                se.getSession().setMaxInactiveInterval(1800);  // 세션 타임아웃 30분 설정
-            }
-
-            // 세션 종료 시 동작 (필요 시 정의)
-            @Override
-            public void sessionDestroyed(HttpSessionEvent se) {
-                // 세션 종료 시 별도 작업 필요할 경우 정의 가능
-            }
-        };
     }
 }
