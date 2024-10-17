@@ -72,7 +72,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/member/logout", "/api/member/join", "/api/member/searchpw", "/api/member/resetpw"
                                 ,"/api/member/emailcheck").permitAll()// 로그아웃 요청은 인증 없이 허용
                                 .requestMatchers("/api/products/**").permitAll()// 상품리스트 요청은 인증 없이 허용
-                                .requestMatchers("/api/member/**", "/api/wishlists/**", "/api/carts/**", "/api/orders/**").hasAnyRole("USER", "ADMIN","MANAGER")
+                                .requestMatchers("/api/member/**", "/api/wishlists/**", "/api/carts/**", "/api/orders/**","/api/payments/**").hasAnyRole("USER", "ADMIN","MANAGER")
 
                         /*.requestMatchers("/api/products/**").hasAnyRole("USER", "MANAGER","ADMIN") // 상품리스틑 요청은 해당롤만 허용 */)
                 // 예외 처리 설정

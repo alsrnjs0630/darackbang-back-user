@@ -7,6 +7,7 @@ import com.lab.darackbang.repository.OrderRepository;
 import com.lab.darackbang.security.dto.LoginDTO;
 import com.lab.darackbang.service.statistic.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
         // Authentication 객체 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginDTO loginDTO = (LoginDTO) authentication.getPrincipal(); // principal을 LoginDTO로 캐스팅
-        log.info("멤버 정보: " + loginDTO);
+        log.info("멤버 정보: {} ", loginDTO);
 
         Member member = memberRepository.findByUserEmail(loginDTO.getUserEmail()).orElseThrow();
 
@@ -74,10 +75,13 @@ public class OrderServiceImpl implements OrderService {
             order.setMember(member);                // 주문내역 회원정보 설정
 
             Order newOrder = orderRepository.save(order);
+
+            //통계데이터 생성
             createStat(newOrder);
+
             return Map.of("RESULT", "SUCCESS");
         } catch (Exception e) {
-            log.error("error{}", e.getMessage());
+            log.error("error {}", e.getMessage());
             return Map.of("RESULT", "FAIL");
         }
 
@@ -150,7 +154,6 @@ public class OrderServiceImpl implements OrderService {
                         productYearStatService.create(productYearStat);
                     }
             );
-
 
             //상품별 분기 총주문 금액 생성및 업데이트
             productQuarterStatService.findByPnoAndYearAndQuarter(orderItem.getProduct().getPno(), year,quarter).ifPresentOrElse(productQuarterStat -> {

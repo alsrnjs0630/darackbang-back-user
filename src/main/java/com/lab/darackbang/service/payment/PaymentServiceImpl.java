@@ -39,6 +39,15 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public IamportResponse<Payment> paymentByImpUid(String impUid) throws IamportResponseException, IOException {
-        return iamportClient.paymentByImpUid(impUid);
+
+        IamportResponse<Payment> paymentIamportResponse =iamportClient.paymentByImpUid(impUid);
+
+
+        log.info("paymentIamportResponse getCode:{}", paymentIamportResponse.getCode());
+        log.info("paymentIamportResponse getMessage:{}", paymentIamportResponse.getMessage());
+
+        log.info("paymentIamportResponse getStatus:{}", paymentIamportResponse.getResponse().getStatus());
+
+        return paymentIamportResponse;
     }
 }
