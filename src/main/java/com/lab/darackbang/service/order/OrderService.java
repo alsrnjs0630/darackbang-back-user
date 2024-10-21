@@ -1,8 +1,10 @@
 package com.lab.darackbang.service.order;
 
+import com.lab.darackbang.entity.Order;
+
 import java.util.List;
 import java.util.Map;
 
 public interface OrderService {
-    Map<String, String> registerOrder(List<Long> cartItemIds);
+    Order registerOrder(List<Long> cartItemIds);
 }

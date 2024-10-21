@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public Map<String, String> registerOrder(List<Long> cartItemIds) {
+    public Order registerOrder(List<Long> cartItemIds) {
         log.info("구매내역 등록 시작-------------------");
 
         // Authentication 객체 가져오기
@@ -79,12 +79,13 @@ public class OrderServiceImpl implements OrderService {
             //통계데이터 생성
             createStat(newOrder);
 
-            return Map.of("RESULT", "SUCCESS");
+            return newOrder;
         } catch (Exception e) {
             log.error("error {}", e.getMessage());
-            return Map.of("RESULT", "FAIL");
+            e.printStackTrace();
         }
 
+        return null;
     }
     /**
      * 주문 상품 통계 데이터 생성
