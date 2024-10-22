@@ -35,15 +35,15 @@ public class Payment extends AbstractAuditingEntity implements Serializable {
     private String bankName;
 
     //주문자 주소
-    @Column(name = "buyer_addr", nullable = true, length = 255)
+    @Column(name = "buyer_addr", nullable = false, length = 255)
     private String buyerAddr;
 
     //주문자 이메일
-    @Column(name = "buyer_email", nullable = true, length = 255)
+    @Column(name = "buyer_email", nullable = false, length = 255)
     private String buyerEmail;
 
     //주문자명
-    @Column(name = "buyer_name", nullable = true, length = 50)
+    @Column(name = "buyer_name", nullable = false, length = 50)
     private String buyerName;
 
     //주문자 우편번호

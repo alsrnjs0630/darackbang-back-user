@@ -1,6 +1,7 @@
 package com.lab.darackbang.controller.advice;
 
 import com.lab.darackbang.exception.CustomJWTException;
+import com.lab.darackbang.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,5 +19,12 @@ public class CustomControllerAdvice {
     protected ResponseEntity<?> handleCustomJWTException(CustomJWTException exception) {
         String message = exception.getMessage();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error","ERROR_ACCESSDENIED"));
+    }
+
+    // 유저 정보를 찾지 못했을 경우 예외 처리
+    @ExceptionHandler(UserNotFoundException.class)
+    protected ResponseEntity<?> handleCustomJWTException(UserNotFoundException exception) {
+        String message = exception.getMessage();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error","ERROR_USER_NOT_FOUND"));
     }
 }

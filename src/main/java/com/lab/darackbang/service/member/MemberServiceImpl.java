@@ -4,6 +4,7 @@ import com.lab.darackbang.dto.member.MemberDTO;
 import com.lab.darackbang.entity.Member;
 import com.lab.darackbang.entity.MemberRole;
 import com.lab.darackbang.entity.Role;
+import com.lab.darackbang.exception.UserNotFoundException;
 import com.lab.darackbang.mapper.member.MemberMapper;
 import com.lab.darackbang.repository.MemberRepository;
 import com.lab.darackbang.security.dto.LoginDTO;
@@ -139,7 +140,9 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    // 비밀번호 찾기
+    /*
+    *  비밀번호 찾기
+    */
     @Override
     public Map<String, String> searchPw(String userEmail, String birthday) {
         Optional<Member> member = memberRepository.findByUserEmail(userEmail);
@@ -155,7 +158,9 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    // 비밀번호 재설정
+    /*
+    * 비밀번호 재설정
+    * */
     @Override
     public Map<String, String> resetPw(String userEmail, String password, String passwordCheck) {
         Optional<Member> member = memberRepository.findByUserEmail(userEmail);
@@ -173,6 +178,11 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+/*    *//*
+     * 마일리지 차감
+     * *//*
+    private Map<String, String>*/
+
     /*
      * 현재 로그인한 (인증된)사용자 정보
      * */
@@ -181,15 +191,19 @@ public class MemberServiceImpl implements MemberService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
 
-        if (principal instanceof LoginDTO) {
-            LoginDTO loginDTO = (LoginDTO) principal;
+        try{
+            if (principal instanceof LoginDTO) {
+                LoginDTO loginDTO = (LoginDTO) principal;
 
-            Member member = memberRepository.findByUserEmail(loginDTO.getUserEmail()).orElseThrow();
-            return member;
-        } else {
-            return null;
+                Member member = memberRepository.findByUserEmail(loginDTO.getUserEmail()).orElseThrow();
+                return member;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            log.error("회원정보 불러오기 실패: ",e.getMessage());
+            throw new UserNotFoundException(e.getMessage(), e.getCause());
         }
+
     }
-
-
 }
