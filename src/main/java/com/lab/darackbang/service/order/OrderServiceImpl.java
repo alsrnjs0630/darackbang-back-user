@@ -4,6 +4,7 @@ import com.lab.darackbang.entity.*;
 import com.lab.darackbang.repository.CartItemRepository;
 import com.lab.darackbang.repository.MemberRepository;
 import com.lab.darackbang.repository.OrderRepository;
+import com.lab.darackbang.repository.ProductRepository;
 import com.lab.darackbang.security.dto.LoginDTO;
 import com.lab.darackbang.service.statistic.*;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartItemRepository cartItemRepository;
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
     private final AgeMonthStatService ageMonthStatService;
 
@@ -40,9 +43,9 @@ public class OrderServiceImpl implements OrderService {
 
     private final ProductQuarterStatService productQuarterStatService;
 
-
+    // 장바구니에서 OrderItem 생성
     @Override
-    public Order registerOrder(List<Long> cartItemIds) {
+    public Order registerCartOrder(List<Long> cartItemIds) {
         log.info("구매내역 등록 시작-------------------");
 
         // Authentication 객체 가져오기
@@ -68,6 +71,10 @@ public class OrderServiceImpl implements OrderService {
                 orderItem.setProductQuantity(cartItem.getQuantity());
                 orderItem.setOrder(order);
                 orderItems.add(orderItem);
+
+                cartItem.getProduct().setQuantity((cartItem.getProduct().getQuantity() - cartItem.getQuantity()) > 0 ? cartItem.getProduct().getQuantity() : 0);
+                productRepository.save(cartItem.getProduct());
+
             });
 
             order.setOrderItems(orderItems);        // 구매아이템 리스트 설정
@@ -87,8 +94,62 @@ public class OrderServiceImpl implements OrderService {
 
         return null;
     }
+
+    // 바로구매에서 OrderItem 생성
+    @Override
+    public Order registerBuyNowOrder(Long productId, Integer quantity) {
+        log.info("구매내역 등록 시작-------------------");
+
+        // Authentication 객체 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginDTO loginDTO = (LoginDTO) authentication.getPrincipal(); // principal을 LoginDTO로 캐스팅
+        log.info("멤버 정보: {} ", loginDTO);
+
+        Member member = memberRepository.findByUserEmail(loginDTO.getUserEmail()).orElseThrow();
+
+        Order order = new Order();
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        try {
+            OrderItem orderItem = new OrderItem();
+            Product product = productRepository.findById(productId).orElseThrow();
+            if (order.getTotalOrderPrice() == null) {
+                order.setTotalOrderPrice(0);
+            }
+            order.setTotalOrderPrice(order.getTotalOrderPrice() + (product.getSalePrice() * quantity));
+            // 구매상품 설정
+            orderItem.setProduct(product);
+            orderItem.setProductPrice(product.getSalePrice());
+            orderItem.setProductQuantity(quantity);
+            orderItem.setOrder(order);
+            orderItems.add(orderItem);
+
+            order.setOrderItems(orderItems);        // 구매아이템 리스트 설정
+            order.setOrderDate(LocalDate.now());    // 주문내역 주문일 설정
+            order.setMember(member);                // 주문내역 회원정보 설정
+
+            Order newOrder = orderRepository.save(order);
+
+            // 주문한 수량 만큼 상품의 재고 차감
+            product.setQuantity((product.getQuantity() - quantity) > 0 ? product.getQuantity() - quantity : 0);
+            productRepository.save(product);
+
+            //통계데이터 생성
+            createStat(newOrder);
+
+        } catch (Exception e) {
+            log.error("error {}", e.getMessage());
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+
     /**
      * 주문 상품 통계 데이터 생성
+     *
      * @param order
      */
     private void createStat(Order order) {
@@ -143,7 +204,7 @@ public class OrderServiceImpl implements OrderService {
             //상품별 년 총주문 금액 생성및 업데이트
             productYearStatService.findByPnoAndYear(orderItem.getProduct().getPno(), year).ifPresentOrElse(productYearStat -> {
                         productYearStat.setProductName(orderItem.getProduct().getProductName());
-                        productYearStat.setSaleTotalPrice(orderItem.getProductPrice()*orderItem.getProductQuantity()+productYearStat.getSaleTotalPrice());
+                        productYearStat.setSaleTotalPrice(orderItem.getProductPrice() * orderItem.getProductQuantity() + productYearStat.getSaleTotalPrice());
                         productYearStatService.update(productYearStat);
                     },
                     () -> {
@@ -157,9 +218,9 @@ public class OrderServiceImpl implements OrderService {
             );
 
             //상품별 분기 총주문 금액 생성및 업데이트
-            productQuarterStatService.findByPnoAndYearAndQuarter(orderItem.getProduct().getPno(), year,quarter).ifPresentOrElse(productQuarterStat -> {
+            productQuarterStatService.findByPnoAndYearAndQuarter(orderItem.getProduct().getPno(), year, quarter).ifPresentOrElse(productQuarterStat -> {
                         productQuarterStat.setProductName(orderItem.getProduct().getProductName());
-                        productQuarterStat.setSaleTotalPrice(orderItem.getProductPrice()*orderItem.getProductQuantity()+productQuarterStat.getSaleTotalPrice());
+                        productQuarterStat.setSaleTotalPrice(orderItem.getProductPrice() * orderItem.getProductQuantity() + productQuarterStat.getSaleTotalPrice());
                         productQuarterStatService.update(productQuarterStat);
                     },
                     () -> {
@@ -174,9 +235,9 @@ public class OrderServiceImpl implements OrderService {
             );
 
             //상품별 달 총주문 금액 생성및 업데이트
-            productMonthStatService.findByPnoAndYearAndMonth(orderItem.getProduct().getPno(), year,month).ifPresentOrElse(productMonthStat ->  {
+            productMonthStatService.findByPnoAndYearAndMonth(orderItem.getProduct().getPno(), year, month).ifPresentOrElse(productMonthStat -> {
                         productMonthStat.setProductName(orderItem.getProduct().getProductName());
-                        productMonthStat.setSaleTotalPrice(orderItem.getProductPrice()*orderItem.getProductQuantity()+productMonthStat.getSaleTotalPrice());
+                        productMonthStat.setSaleTotalPrice(orderItem.getProductPrice() * orderItem.getProductQuantity() + productMonthStat.getSaleTotalPrice());
                         productMonthStatService.update(productMonthStat);
                     },
                     () -> {

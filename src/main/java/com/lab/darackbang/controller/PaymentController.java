@@ -1,5 +1,6 @@
 package com.lab.darackbang.controller;
 
+import com.lab.darackbang.entity.Order;
 import com.lab.darackbang.service.payment.PaymentService;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
@@ -23,14 +24,21 @@ public class PaymentController {
 
     /**
      * 결제 정보 확인 코드
+     *
      * @param impUid
      * @return
      * @throws IamportResponseException
      * @throws IOException
      */
     @PostMapping("/verifyIamport/{imp_uid}")
-    public Map<String, String> paymentByImpUid(@PathVariable("imp_uid") String impUid,  @RequestBody List<Long> cartItemIds) throws IamportResponseException, IOException {
-        return paymentService.paymentByImpUid(impUid,cartItemIds);
+    public Map<String, String> paymentByImpUid(@PathVariable("imp_uid") String impUid, @RequestBody List<Long> cartItemIds) throws IamportResponseException, IOException {
+        return paymentService.cartPayment(impUid, cartItemIds);
+    }
+
+    @PostMapping("/buynow/{imp_uid}/{productId}/{quantity}")
+    public Map<String, String> paymentByImpUid(@PathVariable("imp_uid") String impUid, @PathVariable("productId") Long productId, @PathVariable("quantity") Integer quantity) throws IamportResponseException, IOException {
+
+        return paymentService.buyNowPayment(impUid, productId, quantity);
     }
 
 }

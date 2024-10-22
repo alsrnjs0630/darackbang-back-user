@@ -6,5 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface OrderService {
-    Order registerOrder(List<Long> cartItemIds);
+    Order registerCartOrder(List<Long> cartItemIds);
+    Order registerBuyNowOrder(Long productId, Integer quantity);
 }

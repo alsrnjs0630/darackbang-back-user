@@ -17,9 +17,15 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping("/add")
-    public Order orderAdd (@RequestBody List<Long> cartItemIds) {
+    @PostMapping("/add/cart")
+    public Order cartOrderAdd (@RequestBody List<Long> cartItemIds) {
         log.info("구매내역 컨트롤러 접근 성공");
-        return orderService.registerOrder(cartItemIds);
+        return orderService.registerCartOrder(cartItemIds);
+    }
+
+    @PostMapping("/add/buynow")
+    public Order buyNowOrderAdd (@RequestParam Long productId, @RequestParam Integer quantity) {
+        log.info("구매내역 컨트롤러 접근 성공");
+        return orderService.registerBuyNowOrder(productId, quantity);
     }
 }
