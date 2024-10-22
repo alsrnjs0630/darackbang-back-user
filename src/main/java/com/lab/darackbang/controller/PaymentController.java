@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +29,8 @@ public class PaymentController {
      * @throws IOException
      */
     @PostMapping("/verifyIamport/{imp_uid}")
-    public IamportResponse<Payment> paymentByImpUid(@PathVariable("imp_uid") String impUid, @RequestBody List<Long> cartItemIds) throws IamportResponseException, IOException {
-        return paymentService.paymentByImpUid(impUid, cartItemIds);
+    public Map<String, String> paymentByImpUid(@PathVariable("imp_uid") String impUid,  @RequestBody List<Long> cartItemIds) throws IamportResponseException, IOException {
+        return paymentService.paymentByImpUid(impUid,cartItemIds);
     }
 
 }

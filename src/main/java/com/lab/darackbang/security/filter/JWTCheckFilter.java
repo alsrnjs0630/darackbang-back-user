@@ -1,5 +1,6 @@
 package com.lab.darackbang.security.filter;
 
+import com.google.gson.Gson;
 import com.lab.darackbang.common.utils.JWTUtil;
 import com.lab.darackbang.security.dto.LoginDTO;
 import jakarta.servlet.FilterChain;
@@ -51,7 +52,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 // JWT 검증 실패 처리
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("{\"error\": \"Invalid Token: " + e.getMessage() + "\"}");
+                response.getWriter().print(new Gson().toJson(Map.of("error", "ERROR_ACCESSDENIED")));
                 log.error("Invalid Token Exception", e);  // 예외의 전체 스택트레이스를 로그로 출력
                 return;
             }

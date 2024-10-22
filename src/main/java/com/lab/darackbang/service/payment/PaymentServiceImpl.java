@@ -1,5 +1,14 @@
 package com.lab.darackbang.service.payment;
 
+import com.lab.darackbang.entity.Cart;
+import com.lab.darackbang.entity.Member;
+import com.lab.darackbang.exception.UserNotFoundException;
+import com.lab.darackbang.mapper.payment.PaymentMapper;
+import com.lab.darackbang.repository.CartItemRepository;
+import com.lab.darackbang.repository.CartRepository;
+import com.lab.darackbang.repository.MemberRepository;
+import com.lab.darackbang.repository.PaymentRepository;
+import com.lab.darackbang.security.dto.LoginDTO;
 import com.lab.darackbang.service.order.OrderService;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
@@ -9,12 +18,16 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 @Slf4j
@@ -22,6 +35,11 @@ import java.util.List;
 @Transactional
 public class PaymentServiceImpl implements PaymentService {
     private final OrderService orderService;
+    private final PaymentRepository paymentRepository;
+    private final PaymentMapper paymentMapper;
+    private final CartItemRepository cartItemRepository;
+    private final CartRepository cartRepository;
+    private final MemberRepository memberRepository;
 
     @Value("${iamport.key}")
     private String restApiKey;
@@ -42,112 +60,53 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public IamportResponse<Payment> paymentByImpUid(String impUid, List<Long> cartItemIds) throws IamportResponseException, IOException {
+    public Map<String, String> paymentByImpUid(String impUid, List<Long> cartItemIds) throws IamportResponseException, IOException {
 
+        try {
+            log.info("결제 아이디: ", impUid);
 
-        log.info("결제 아이디: ", impUid);
+            // 회원정보 조회
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            LoginDTO loginDTO = (LoginDTO) authentication.getPrincipal();
+            Member member = memberRepository.findByUserEmail(loginDTO.getUserEmail())
+                    .orElseThrow(() -> new UserNotFoundException("회원 정보를 찾을 수 없습니다."));
 
-        IamportResponse<Payment> paymentIamportResponse =iamportClient.paymentByImpUid(impUid);
+            IamportResponse<Payment> paymentIamportResponse = iamportClient.paymentByImpUid(impUid);
 
-        log.info("paymentIamportResponse getCode:{}", paymentIamportResponse.getCode());
-        log.info("paymentIamportResponse getMessage:{}", paymentIamportResponse.getMessage());
+            // payment 객체 생성
+            com.lab.darackbang.entity.Payment payment = paymentMapper.toEntity(paymentIamportResponse.getResponse());
+            payment.setOrder(orderService.registerOrder(cartItemIds));
 
-        log.info("paymentIamportResponse getStatus:{}", paymentIamportResponse.getResponse().getStatus());
+            // payment 저장
+            paymentRepository.save(payment);
 
-        com.lab.darackbang.entity.Payment payment = new com.lab.darackbang.entity.Payment();
+            // 결제한 회원의 카트 조회
+            Cart cart = cartRepository.findByMemberId(member.getId())
+                    .orElseThrow(() -> new RuntimeException("카트가 존재하지 않습니다."));
 
-        payment.setApplyNum(paymentIamportResponse.getResponse().getApplyNum());
+            // 구매 상품 카트 목록에서 삭제
+            cartItemRepository.deleteAllById(cartItemIds);
 
-        //가상계좌 은행명
-        payment.setBankName(paymentIamportResponse.getResponse().getBankName());
+            // 카트에 속한 상품 삭제
+            cart.getCartItems().removeIf(cartItem -> cartItemIds.contains(cartItem.getId()));
 
-        //주문자 주소
-        payment.setBuyerAddr(paymentIamportResponse.getResponse().getBuyerAddr());
+            // 장바구니에 상품이 없다면 장바구니 삭제
+            if (cart.getCartItems().isEmpty()) {
+                cartRepository.deleteById(cart.getId());
+                log.info("장바구니 상품 모두 구매. 장바구니 삭제");
+            }
+            return Map.of("RESULT", "SUCCESS");
 
-        //주문자 이메일
-        payment.setBuyerEmail(paymentIamportResponse.getResponse().getBuyerEmail());
-
-        //주문자명
-        payment.setBuyerName(paymentIamportResponse.getResponse().getBuyerName());
-
-        //주문자 우편번호
-        payment.setBuyerPostcode(paymentIamportResponse.getResponse().getBuyerPostcode());
-
-        //주문자 연락처
-        payment.setBuyerTel(paymentIamportResponse.getResponse().getBuyerTel());
-
-        //카드명
-        payment.setCardName(paymentIamportResponse.getResponse().getCardName());
-
-        //카드 번호
-        payment.setCardNumber(paymentIamportResponse.getResponse().getCardNumber());
-        //할부 개월
-        //기본값이 00
-        payment.setCardQuota(Integer.toString(paymentIamportResponse.getResponse().getCardQuota()));
-
-        //기본값이 00
-        payment.setCurrency(paymentIamportResponse.getResponse().getCurrency());
-
-        //가맹점 임의 지정 데이터
-        payment.setCustomData(paymentIamportResponse.getResponse().getCustomData());
-
-        //회원번호
-        payment.setCustomerUid(paymentIamportResponse.getResponse().getCustomerUid());
-
-        // IamPort 고유 결제 번호
-        payment.setImpUid(paymentIamportResponse.getResponse().getImpUid());
-
-        //주문번호
-        payment.setMerchantUid(paymentIamportResponse.getResponse().getMerchantUid());
-
-        //상품명
-        payment.setName(paymentIamportResponse.getResponse().getName());
-
-        //결제금액
-        payment.setPaidAmount(paymentIamportResponse.getResponse().getAmount().intValue());
-
-        //결제승인시각, 결제일
-        // Unix timestamp 사용시  type, Mapper로 으로 변환
-        payment.setPaidAt(paymentIamportResponse.getResponse().getPaidAt().toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime());
-
-        //결제수단 구분코드
-        payment.setPayMethod(paymentIamportResponse.getResponse().getPayMethod());
-
-        //PG사 구분코드
-        payment.setPgProvider(paymentIamportResponse.getResponse().getPgProvider());
-
-        //PG사 거래번호
-        payment.setPgTid(paymentIamportResponse.getResponse().getPgTid());
-
-        // 결제 타입
-        // 일반결제인 경우 무조건 payment로 전달
-        payment.setPgType("payment");
-
-        //거래 매출전표 URL
-        payment.setReceiptUrl(paymentIamportResponse.getResponse().getReceiptUrl());
-
-        //카드 유효기간
-        //payment.setExpirationDate(paymentIamportResponse.getResponse().get);
-
-        // 결제상태 (default 01 : 결제 대기, 02 : 결제 성공, 03 : 결제 실패)
-        payment.setStatus(paymentIamportResponse.getResponse().getStatus());
-
-        //결제 성공여부
-        //결제승인 혹은 가상계좌 발급이 성공한 경우 true
-        payment.setSuccess(paymentIamportResponse.getResponse().getImpUid() != null);
-
-        // 결제 실패 원인
-        payment.setFailReason(paymentIamportResponse.getResponse().getFailReason());
-
-        payment.setOrder(orderService.registerOrder(cartItemIds));
-
-
-
-    //결재 완료->저장 후 해당 cartItem들 삭제
-
-
-        return paymentIamportResponse;
+        } catch (IamportResponseException | IOException e) {
+            log.info("결제 실패 : ", e);
+            e.printStackTrace();
+            return Map.of("RESULT", "FAIL");
+        } catch (UserNotFoundException e) {
+            log.info("유저 정보를 찾을 수 없습니다. : ", e);
+            return Map.of("RESULT", "FAIL");
+        } catch (RuntimeException e) {
+            log.info("카트 정보를 찾을 수 없습니다. : ", e);
+            return Map.of("RESULT", "FAIL");
+        }
     }
 }
