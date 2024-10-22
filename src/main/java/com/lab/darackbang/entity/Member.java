@@ -103,6 +103,7 @@ public class Member extends AbstractAuditingEntity implements Serializable {
 
     // memberRole 테이블 (회원롤) 매핑 설정
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("member")  // 순환 참조 방지
     private List<MemberRole> memberRoles;
 
     // memberCard 테이블 (회원카드정보) 매핑 설정
