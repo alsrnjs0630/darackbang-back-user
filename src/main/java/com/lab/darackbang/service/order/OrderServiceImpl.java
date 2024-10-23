@@ -72,8 +72,17 @@ public class OrderServiceImpl implements OrderService {
                 orderItem.setOrder(order);
                 orderItems.add(orderItem);
 
-                cartItem.getProduct().setQuantity((cartItem.getProduct().getQuantity() - cartItem.getQuantity()) > 0 ? cartItem.getProduct().getQuantity() : 0);
-                productRepository.save(cartItem.getProduct());
+                // 주문한 수량 만큼 상품의 재고 차감
+                Product product = cartItem.getProduct();
+                int newQuantity = product.getQuantity() - cartItem.getQuantity();
+                product.setQuantity(newQuantity > 0 ? newQuantity : 0);
+
+                // 재고가 0 이하라면 isSoldout을 true로 설정
+                if (newQuantity <= 0) {
+                    product.setIsSoldout(true);
+                }
+
+                productRepository.save(product);
 
             });
 
@@ -131,7 +140,14 @@ public class OrderServiceImpl implements OrderService {
             Order newOrder = orderRepository.save(order);
 
             // 주문한 수량 만큼 상품의 재고 차감
-            product.setQuantity((product.getQuantity() - quantity) > 0 ? product.getQuantity() - quantity : 0);
+            int newQuantity = product.getQuantity() - quantity;
+            product.setQuantity(newQuantity > 0 ? newQuantity : 0);
+
+            // 재고가 0 이하라면 isSoldout을 true로 설정
+            if (newQuantity <= 0) {
+                product.setIsSoldout(true);
+            }
+
             productRepository.save(product);
 
             //통계데이터 생성

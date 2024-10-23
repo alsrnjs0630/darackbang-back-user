@@ -133,8 +133,6 @@ public class PaymentServiceImpl implements PaymentService {
             // payment 저장
             paymentRepository.save(payment);
 
-
-
             return Map.of("RESULT", "SUCCESS");
 
         } catch (IamportResponseException | IOException e) {
