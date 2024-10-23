@@ -137,6 +137,8 @@ public class OrderServiceImpl implements OrderService {
             //통계데이터 생성
             createStat(newOrder);
 
+            return newOrder;
+
         } catch (Exception e) {
             log.error("error {}", e.getMessage());
             e.printStackTrace();
@@ -144,8 +146,6 @@ public class OrderServiceImpl implements OrderService {
 
         return null;
     }
-
-
 
     /**
      * 주문 상품 통계 데이터 생성
