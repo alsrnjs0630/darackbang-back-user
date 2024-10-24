@@ -153,10 +153,4 @@ public class PaymentServiceImpl implements PaymentService {
             return Map.of("RESULT", "FAIL");
         }
     }
-
-            // 마일리지 적립 및 차감
-            log.info("전달받은 마일리지 값 : ", mileage, useMileage);
-            member.setMileage(member.getMileage() + mileage - useMileage);
-            memberRepository.save(member);
-
 }
