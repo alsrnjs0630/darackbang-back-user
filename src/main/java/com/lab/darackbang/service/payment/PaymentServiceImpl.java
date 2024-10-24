@@ -135,9 +135,15 @@ public class PaymentServiceImpl implements PaymentService {
             com.lab.darackbang.entity.Payment payment = paymentMapper.toEntity(paymentIamportResponse.getResponse());
 
             payment.setOrder(orderService.registerBuyNowOrder(productId, quantity));
+            payment.setSuccess(true);
 
             // payment 저장
             paymentRepository.save(payment);
+
+            // 마일리지 적립 및 차감
+            log.info("전달받은 마일리지 값 : ", mileage, useMileage);
+            member.setMileage(member.getMileage() + mileage - useMileage);
+            memberRepository.save(member);
 
             return Map.of("RESULT", "SUCCESS");
 

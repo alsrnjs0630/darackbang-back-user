@@ -125,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
             if (order.getTotalOrderPrice() == null) {
                 order.setTotalOrderPrice(0);
             }
-            order.setTotalOrderPrice(order.getTotalOrderPrice() + (product.getSalePrice() * quantity));
+            order.setTotalOrderPrice(order.getTotalOrderPrice() + (product.getSalePrice()));
             // 구매상품 설정
             orderItem.setProduct(product);
             orderItem.setProductPrice(product.getSalePrice());
