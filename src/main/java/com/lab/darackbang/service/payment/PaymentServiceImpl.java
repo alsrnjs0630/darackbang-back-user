@@ -61,7 +61,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Map<String, String> cartPayment(String impUid, List<Long> cartItemIds) throws IamportResponseException, IOException {
+    public Map<String, String> cartPayment(String impUid, List<Long> cartItemIds, Integer mileage, Integer useMileage) throws IamportResponseException, IOException {
 
         try {
             log.info("결제 아이디: ", impUid);
@@ -96,6 +96,12 @@ public class PaymentServiceImpl implements PaymentService {
                 cartRepository.deleteById(cart.getId());
                 log.info("장바구니 상품 모두 구매. 장바구니 삭제");
             }
+
+            // 마일리지 적립 및 차감
+            log.info("전달받은 마일리지 값 : ", mileage, useMileage);
+            member.setMileage(member.getMileage() + mileage - useMileage);
+            memberRepository.save(member);
+
             return Map.of("RESULT", "SUCCESS");
 
         } catch (IamportResponseException | IOException e) {
@@ -112,7 +118,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Map<String, String> buyNowPayment(String impUid, Long productId, Integer quantity) throws IamportResponseException, IOException {
+    public Map<String, String> buyNowPayment(String impUid, Long productId, Integer quantity, Integer mileage, Integer useMileage) throws IamportResponseException, IOException {
 
         try {
             log.info("결제 아이디: ", impUid);
@@ -148,5 +154,9 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
+            // 마일리지 적립 및 차감
+            log.info("전달받은 마일리지 값 : ", mileage, useMileage);
+            member.setMileage(member.getMileage() + mileage - useMileage);
+            memberRepository.save(member);
 
 }

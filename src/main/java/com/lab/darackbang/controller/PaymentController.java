@@ -30,15 +30,17 @@ public class PaymentController {
      * @throws IamportResponseException
      * @throws IOException
      */
-    @PostMapping("/verifyIamport/{imp_uid}")
-    public Map<String, String> paymentByImpUid(@PathVariable("imp_uid") String impUid, @RequestBody List<Long> cartItemIds) throws IamportResponseException, IOException {
-        return paymentService.cartPayment(impUid, cartItemIds);
+    @PostMapping("/verifyIamport/{imp_uid}/{mileage}/{useMileage}")
+    public Map<String, String> paymentByImpUid(@PathVariable("imp_uid") String impUid, @PathVariable Integer mileage, @PathVariable Integer useMileage, @RequestBody List<Long> cartItemIds) throws IamportResponseException, IOException {
+        log.info("장바구니 결제 시작 ---------------------");
+        return paymentService.cartPayment(impUid, cartItemIds, mileage, useMileage);
     }
 
-    @PostMapping("/buynow/{imp_uid}/{productId}/{quantity}")
-    public Map<String, String> paymentByImpUid(@PathVariable("imp_uid") String impUid, @PathVariable("productId") Long productId, @PathVariable("quantity") Integer quantity) throws IamportResponseException, IOException {
+    @PostMapping("/buynow/{imp_uid}/{productId}/{quantity}/{mileage}/{useMileage}")
+    public Map<String, String> paymentByImpUid(@PathVariable("imp_uid") String impUid, @PathVariable("productId") Long productId, @PathVariable("quantity") Integer quantity
+    ,@PathVariable Integer mileage, @PathVariable Integer useMileage) throws IamportResponseException, IOException {
 
-        return paymentService.buyNowPayment(impUid, productId, quantity);
+        return paymentService.buyNowPayment(impUid, productId, quantity, mileage, useMileage);
     }
 
 }

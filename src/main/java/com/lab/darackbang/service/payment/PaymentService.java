@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface PaymentService {
-    Map<String, String> cartPayment(String impUid, List<Long> cartItemIds) throws IamportResponseException, IOException;
-    Map<String, String> buyNowPayment(String impUid, Long productId, Integer quantity) throws IamportResponseException, IOException;
+    Map<String, String> cartPayment(String impUid, List<Long> cartItemIds, Integer mileage, Integer useMileage) throws IamportResponseException, IOException;
+    Map<String, String> buyNowPayment(String impUid, Long productId, Integer quantity, Integer mileage, Integer useMileage) throws IamportResponseException, IOException;
 }

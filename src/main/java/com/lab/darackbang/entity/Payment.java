@@ -61,13 +61,14 @@ public class Payment extends AbstractAuditingEntity implements Serializable {
     //카드 번호
     @Column(name = "card_number", nullable = true, length = 19)
     private String cardNumber;
+
     //할부 개월
     //기본값이 00
     @Column(name = "card_quota", nullable = true, length = 2)
     private String cardQuota;
 
-    //기본값이 00
-    @Column(name = "currency", nullable = true, length = 10)
+    // 결제통화
+    @Column(name = "currency", nullable = true, length = 3)
     private String currency;
 
     //가맹점 임의 지정 데이터
