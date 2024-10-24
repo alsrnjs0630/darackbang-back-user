@@ -64,10 +64,10 @@ public class OrderServiceImpl implements OrderService {
                 if (order.getTotalOrderPrice() == null) {
                     order.setTotalOrderPrice(0);
                 }
-                order.setTotalOrderPrice(order.getTotalOrderPrice() + (cartItem.getProductPrice() * cartItem.getQuantity()));
+                order.setTotalOrderPrice(order.getTotalOrderPrice() + cartItem.getProductPrice());
                 // 구매상품 설정
                 orderItem.setProduct(cartItem.getProduct());
-                orderItem.setProductPrice(cartItem.getProductPrice());
+                orderItem.setProductPrice(cartItem.getProductPrice()/cartItem.getQuantity());
                 orderItem.setProductQuantity(cartItem.getQuantity());
                 orderItem.setOrder(order);
                 orderItems.add(orderItem);
@@ -125,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
             if (order.getTotalOrderPrice() == null) {
                 order.setTotalOrderPrice(0);
             }
-            order.setTotalOrderPrice(order.getTotalOrderPrice() + (product.getSalePrice()));
+            order.setTotalOrderPrice(order.getTotalOrderPrice() + (product.getSalePrice()) * quantity);
             // 구매상품 설정
             orderItem.setProduct(product);
             orderItem.setProductPrice(product.getSalePrice());
