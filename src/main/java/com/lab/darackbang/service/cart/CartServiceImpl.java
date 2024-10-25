@@ -83,7 +83,10 @@ public class CartServiceImpl implements CartService {
 
                                     // 같은 상품이 있으면 수량업데이트 없으면 새상품 카트아이템에 등록
                                     if (existingCartItem.isPresent()) {
+                                        // 수량 업데이트
                                         existingCartItem.get().updateQuantity(request.getQuantity());
+                                        // 수량에 따른 상품 가격도 업데이트
+                                        existingCartItem.get().setProductPrice(product.getSalePrice() * existingCartItem.get().getQuantity());
                                     } else {
                                         CartItem newCartItem = new CartItem();
                                         newCartItem.setCart(existMember.getCart());
