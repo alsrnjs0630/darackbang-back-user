@@ -23,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -70,8 +69,7 @@ public class SecurityConfig {
                 // 인증 요청에 대한 권한 설정
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/api/member/logout", "/api/member/join", "/api/member/searchpw", "/api/member/resetpw"
-                                ,"/api/member/emailcheck").permitAll()// 로그아웃 요청은 인증 없이 허용
-                                .requestMatchers("/api/products/**").permitAll()// 상품리스트 요청은 인증 없이 허용
+                                ,"/api/member/emailcheck","api/events/**","/api/products/**").permitAll()// 로그아웃 요청은 인증 없이 허용
                                 .requestMatchers("/api/member/**", "/api/wishlists/**", "/api/carts/**", "/api/orders/**","/api/payments/**").hasAnyRole("USER", "ADMIN","MANAGER")
 
                         /*.requestMatchers("/api/products/**").hasAnyRole("USER", "MANAGER","ADMIN") // 상품리스틑 요청은 해당롤만 허용 */)
