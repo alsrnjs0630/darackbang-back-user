@@ -1,20 +1,25 @@
 package com.lab.darackbang.service.event;
 
+import com.lab.darackbang.common.utils.CustomFileUtil;
 import com.lab.darackbang.criteria.EventCriteria;
 import com.lab.darackbang.dto.common.PageDTO;
+import com.lab.darackbang.dto.event.EventDTO;
 import com.lab.darackbang.dto.event.EventResponseDTO;
 import com.lab.darackbang.dto.event.EventSearchDTO;
 import com.lab.darackbang.entity.Event;
 import com.lab.darackbang.mapper.PageMapper;
 import com.lab.darackbang.mapper.event.EventMapper;
 import com.lab.darackbang.repository.EventRepository;
+import com.lab.darackbang.service.product.ProductServiceImpl;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +33,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final PageMapper pageMapper;
+    private final CustomFileUtil fileUtil;
 
     // 이벤트 목록
     @Override
@@ -45,4 +51,18 @@ public class EventServiceImpl implements EventService {
         return pageMapper.toDTO(eventRepository.findAll(spec, correctedPageable).map(eventMapper::toResponseDTO),searchDTO);
     }
 
+    @Override
+    public EventDTO findOne(Long id) throws IOException {
+        return eventMapper.toDTO(eventRepository.findById(id).orElse(null));
+    }
+
+    @Override
+    public ResponseEntity<Resource> getEventFile(String fileName) {
+        return fileUtil.getEventFile(fileName);
+    }
+
+    @Override
+    public List<String> fileNameList() {
+        return eventRepository.findAllFileNames();
+    }
 }

@@ -34,6 +34,8 @@ com:
   lab:
     upload:
       path: C:\darackbang\upload
+    eventUpload:
+      path: C:\darackbang\upload\event
 
 iamport:
   key: 3545062336248167

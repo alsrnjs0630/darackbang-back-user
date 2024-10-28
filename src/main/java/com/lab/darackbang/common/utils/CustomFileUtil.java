@@ -25,6 +25,9 @@ public class CustomFileUtil {
     @Value("${com.lab.upload.path}")
     private  String uploadPath;
 
+    @Value("${com.lab.eventUpload.path}")
+    private  String eventUploadPath;
+
     /**
      * 프로젝트 실행시 무조건 실행
      */
@@ -51,6 +54,29 @@ public class CustomFileUtil {
 
         if(!resource.exists()){
             resource = new FileSystemResource(uploadPath+File.separator+"default.png");
+        }
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        try{
+            httpHeaders.add("Content-Type", Files.probeContentType(resource.getFile().toPath()));
+
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok().headers(httpHeaders).body(resource);
+    }
+
+    /**
+     * 업로드 이벤트 이미지 가져 뷰에서 보기
+     * @param fileName
+     * @return
+     */
+    public ResponseEntity<Resource> getEventFile(String fileName){
+        Resource resource = new FileSystemResource(eventUploadPath+File.separator+fileName);
+
+        if(!resource.exists()){
+            resource = new FileSystemResource(eventUploadPath+File.separator+"default.png");
         }
 
         HttpHeaders httpHeaders = new HttpHeaders();
