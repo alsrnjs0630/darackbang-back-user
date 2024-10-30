@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -78,62 +79,31 @@ public class MemberServiceImpl implements MemberService {
      * */
     @Override
     public Map<String, String> update(MemberDTO memberDTO) {
+        Member member = authenticationVerification();
 
-        Member member = authenticationVerification(); // 기존 회원 정보
-
-        if (!Objects.equals(member.getName(), memberDTO.getName())) { // 이름 수정
-            member.setName(memberDTO.getName());
-        }
-
-        if (!Objects.equals(member.getGender(), memberDTO.getGender())) { // 성별 수정
-            member.setGender(memberDTO.getGender());
-        }
-
-        if (!Objects.equals(member.getAddress(), memberDTO.getAddress())) { // 주소 수정
-            member.setPostNo(memberDTO.getPostNo());
-            member.setAddress(memberDTO.getAddress());
-        }
-
-        if (!Objects.equals(member.getAddShippingAddr(), memberDTO.getAddShippingAddr())) { // 추가 배송지 수정
-            member.setAddPostNo(memberDTO.getAddPostNo());
-            member.setAddShippingAddr(memberDTO.getAddShippingAddr());
-        }
-
-        if (!Objects.equals(member.getShippingAddr(), memberDTO.getShippingAddr())) { // 기본 배송지 수정
-            member.setShipPostNo(memberDTO.getShipPostNo());
-            member.setShippingAddr(memberDTO.getShippingAddr());
-        }
-
-        if (!Objects.equals(member.getMobileNo(), memberDTO.getMobileNo())) { // 휴대폰번호 수정
-            member.setMobileNo(memberDTO.getMobileNo());
-        }
-
-        if (!Objects.equals(member.getPhoneNo(), memberDTO.getPhoneNo())) { // 전화번호 수정
-            member.setPhoneNo(memberDTO.getPhoneNo());
-        }
-
-        if (!Objects.equals(member.getMemberState(), memberDTO.getMemberState())) { // 회원상태 수정
-            member.setMemberState(memberDTO.getMemberState());
-        }
-
-        /*
-        Objects.equals() 사용: 이 메서드는 두 값이 동일한지 비교하며, 한쪽 또는 양쪽 모두 null인 경우에도 안전하게 처리합니다.
-            즉, null.equals()로 인한 NullPointerException이 발생하지 않습니다.
-        필드 비교: 각 필드를 비교할 때 Objects.equals()를 사용하여 null을 안전하게 처리한 후 변경된 값만 업데이트합니다.*/
-
-        log.debug("DTO : {}", memberDTO);
+        // 각 필드별로 업데이트 내용 반영
+        updateField(member::setName, member.getName(), memberDTO.getName());
+        updateField(member::setGender, member.getGender(), memberDTO.getGender());
+        updateField(member::setAddress, member.getAddress(), memberDTO.getAddress());
+        updateField(member::setPostNo, member.getPostNo(), memberDTO.getPostNo());
+        updateField(member::setAddShippingAddr, member.getAddShippingAddr(), memberDTO.getAddShippingAddr());
+        updateField(member::setAddPostNo, member.getAddPostNo(), memberDTO.getAddPostNo());
+        updateField(member::setShippingAddr, member.getShippingAddr(), memberDTO.getShippingAddr());
+        updateField(member::setShipPostNo, member.getShipPostNo(), memberDTO.getShipPostNo());
+        updateField(member::setMobileNo, member.getMobileNo(), memberDTO.getMobileNo());
+        updateField(member::setPhoneNo, member.getPhoneNo(), memberDTO.getPhoneNo());
+        updateField(member::setMemberState, member.getMemberState(), memberDTO.getMemberState());
 
         memberRepository.save(member);
-
         return Map.of("RESULT", "SUCCESS");
     }
 
-    // 아이디 중복 검사
+    // 이메일 중복 검사
     @Override
-    public Map<String, String> eamilCheck(String userEmail) {
+    public Map<String, String> eamilCheck(String userEmail){
         Optional<Member> member = memberRepository.findByUserEmail(userEmail);
         log.info("입력한 회원 이메일 : " + userEmail);
-        if (member.isPresent()) {
+        if (member.isPresent() && member.get().getMemberState().equals("01")) {
             return Map.of("RESULT", "EXIST");
         } else {
             return Map.of("RESULT", "NON-EXIST");
@@ -141,7 +111,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /*
-    *  비밀번호 찾기
+    *  비밀번호 찾기 -> 이메일과 생년월일로 유저 본인인증 후 비밀번호 재설정
     */
     @Override
     public Map<String, String> searchPw(String userEmail, String birthday) {
@@ -178,10 +148,14 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-/*    *//*
-     * 마일리지 차감
-     * *//*
-    private Map<String, String>*/
+    /*
+    * 회원정보 업데이트 메소드
+    * */
+    private <T> void updateField(Consumer<T> setter, T current, T updated) {
+        if (!Objects.equals(current, updated)) {
+            setter.accept(updated);
+        }
+    }
 
     /*
      * 현재 로그인한 (인증된)사용자 정보

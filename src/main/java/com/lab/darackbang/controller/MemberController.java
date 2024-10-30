@@ -47,7 +47,7 @@ public class MemberController {
         return memberService.eamilCheck(userEmail);
     }
 
-    // 비밀번호 찾기
+    // 비밀번호 재설정 (아이디 검색)
     @PostMapping("/member/searchpw")
     public Map<String,String> searchpw(String userEmail, String birthday) {
         return memberService.searchPw(userEmail,birthday);

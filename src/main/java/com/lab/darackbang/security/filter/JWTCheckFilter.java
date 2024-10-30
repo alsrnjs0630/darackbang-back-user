@@ -24,11 +24,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
         String authorizationHeader = request.getHeader("Authorization");
 
+        // Access Token이 존재하는 경우
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 
             String token = authorizationHeader.substring(7); // "Bearer " 부분 제거
-
-            log.info("여기는 오냐?");
 
             try {
                 // JWT 검증 및 클레임 추출
@@ -37,17 +36,15 @@ public class JWTCheckFilter extends OncePerRequestFilter {
                 // 권한 정보 추출 (List<Map<String, String>> 형식을 List<String>으로 변환)
                 log.info("권한 이름 :{} ", claims.get("roleNames"));
                 List<String> roles = (List<String>) claims.get("roleNames");
-                /*List<String> roles = rolesMap.stream()
-                        .map(roleMap -> roleMap.get("authority")) // "authority" 값을 추출
-                        .collect(Collectors.toList());*/
+
                 log.info("권한 이름 :{} ", claims.get("roleNames"));
 
-                // 사용자 인증 객체 생성 및 건텍스트 설정
+                // 사용자 인증 객체 생성 및 컨텍스트 설정
                 LoginDTO userDetails = new LoginDTO((String) claims.get("email"), "", "", roles, (String) claims.get("memberState"));
-
                 log.info("유저 디테일: {}", userDetails);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 log.info("인증 객체: {}", authentication);
+
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
                 // JWT 검증 실패 처리

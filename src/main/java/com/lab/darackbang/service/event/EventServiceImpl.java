@@ -33,7 +33,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final PageMapper pageMapper;
-    private final CustomFileUtil fileUtil;
+    private final CustomFileUtil customFileUtil;
 
     // 이벤트 목록
     @Override
@@ -58,7 +58,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public ResponseEntity<Resource> getEventFile(String fileName) {
-        return fileUtil.getEventFile(fileName);
+        return customFileUtil.getEventFile(fileName);
     }
 
     @Override

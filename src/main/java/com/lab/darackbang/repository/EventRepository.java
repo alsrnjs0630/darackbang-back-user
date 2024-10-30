@@ -12,6 +12,6 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event, Long>,
         JpaSpecificationExecutor<Event> {
     // 진행중인 Event의 fileName만 추출하여 리스트로 반환하는 메서드
-    @Query("SELECT fileName FROM Event WHERE eventState = '02'")
+    @Query("SELECT fileName FROM Event WHERE eventState = '02' ORDER BY id asc")
     List<String> findAllFileNames();
 }
