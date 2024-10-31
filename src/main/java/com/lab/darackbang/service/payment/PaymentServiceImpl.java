@@ -77,6 +77,7 @@ public class PaymentServiceImpl implements PaymentService {
             // payment 객체 생성
             com.lab.darackbang.entity.Payment payment = paymentMapper.toEntity(paymentIamportResponse.getResponse());
             payment.setOrder(orderService.registerCartOrder(cartItemIds));
+            payment.setSuccess(true);
 
             // payment 저장
             paymentRepository.save(payment);
