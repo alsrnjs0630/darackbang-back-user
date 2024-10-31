@@ -64,7 +64,7 @@ public class PaymentServiceImpl implements PaymentService {
     public Map<String, String> cartPayment(String impUid, List<Long> cartItemIds, Integer mileage, Integer useMileage) throws IamportResponseException, IOException {
 
         try {
-            log.info("결제 아이디: ", impUid);
+            log.info("결제 아이디: {}", impUid);
 
             // 회원정보 조회
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -99,7 +99,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             // 마일리지 적립 및 차감
-            log.info("전달받은 마일리지 값 : ", mileage, useMileage);
+            log.info("전달받은 마일리지 값 : {}, {}", mileage, useMileage);
             member.setMileage(member.getMileage() + mileage - useMileage);
             memberRepository.save(member);
 
@@ -122,7 +122,7 @@ public class PaymentServiceImpl implements PaymentService {
     public Map<String, String> buyNowPayment(String impUid, Long productId, Integer quantity, Integer mileage, Integer useMileage) throws IamportResponseException, IOException {
 
         try {
-            log.info("결제 아이디: ", impUid);
+            log.info("결제 아이디: {}", impUid);
 
             // 회원정보 조회
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -142,7 +142,7 @@ public class PaymentServiceImpl implements PaymentService {
             paymentRepository.save(payment);
 
             // 마일리지 적립 및 차감
-            log.info("전달받은 마일리지 값 : ", mileage, useMileage);
+            log.info("전달받은 마일리지 값 : {}, {}", mileage, useMileage);
             member.setMileage(member.getMileage() + mileage - useMileage);
             memberRepository.save(member);
 
